@@ -28,7 +28,7 @@ export default function Navbar() {
           {navIcons.map((icon) => (
             <li
               key={icon.id}
-              className={`${icon.isClickable && "cursor-pointer"} icon`}
+              className={`${icon.isClickable && "cursor-pointer"} transition duration-200 hover:scale-125`}
             >
               <Image
                 src={icon.img}

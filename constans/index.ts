@@ -74,3 +74,16 @@ export const dockApps = [
     canOpen: false,
   },
 ];
+
+export const initialZIndex = 1000;
+
+export const windowConfig = {
+  finder: { isOpen: false, zIndex: initialZIndex, data: null },
+  contact: { isOpen: false, zIndex: initialZIndex, data: null },
+  resume: { isOpen: false, zIndex: initialZIndex, data: null },
+  safari: { isOpen: false, zIndex: initialZIndex, data: null },
+  photos: { isOpen: false, zIndex: initialZIndex, data: null },
+  terminal: { isOpen: false, zIndex: initialZIndex, data: null },
+  txtfile: { isOpen: false, zIndex: initialZIndex, data: null },
+  imgfile: { isOpen: false, zIndex: initialZIndex, data: null },
+};
