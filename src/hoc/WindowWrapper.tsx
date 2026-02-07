@@ -1,44 +1,52 @@
 "use client";
 
+import gsap from "gsap";
 import useWindowStore from "@/src/store/window";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import gsap from "gsap";
+import WindowsControls from "@/src/components/windows/WindowsControls";
+
 import Draggable from "gsap/Draggable";
 gsap.registerPlugin(Draggable);
 
 interface WindowWrapperProps {
   Component: React.ComponentType<any>;
   windowKey: string;
+  titleHeader: string;
 }
 
 export default function WindowWrapper({
   Component,
   windowKey,
+  titleHeader,
 }: WindowWrapperProps) {
   const Wrapped: React.FC<any> = (props) => {
     const { windows, focusWindow } = useWindowStore();
     const { zIndex, isOpen } = windows[windowKey as keyof typeof windows];
-    const ref = useRef<HTMLDivElement>(null);
+    const windowRef = useRef<HTMLDivElement>(null);
+    const windowHeaderRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-      const element = ref.current;
-      if (!element || !isOpen) return;
+      const windowEl = windowRef.current;
+      if (!windowEl || !isOpen) return;
 
-      element.style.display = "block";
+      windowEl.style.display = "block";
 
       gsap.fromTo(
-        element,
+        windowEl,
         { scale: 0.8, opacity: 0, y: 40 },
         { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
       );
     }, [isOpen]);
 
     useGSAP(() => {
-      const element = ref.current;
-      if (!element) return;
+      const windowEl = windowRef.current;
+      const headerEl = windowHeaderRef.current;
 
-      const [instance] = Draggable.create(element, {
+      if (!windowEl || !headerEl) return;
+
+      const [instance] = Draggable.create(windowEl, {
+        trigger: headerEl,
         onPress: () => focusWindow(windowKey as keyof typeof windows),
       });
 
@@ -48,13 +56,20 @@ export default function WindowWrapper({
     return (
       <section
         id={windowKey}
-        ref={ref}
+        ref={windowRef}
         style={{
           zIndex,
           display: isOpen ? "block" : "none",
         }}
         className="absolute"
       >
+        <div id="window-header" ref={windowHeaderRef}>
+          <WindowsControls target={windowKey} />
+          <h2 className="font-bold text-sm text-center w-full">
+            {titleHeader}
+          </h2>
+        </div>
+
         <Component {...props} />
       </section>
     );
