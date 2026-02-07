@@ -87,3 +87,26 @@ export const windowConfig = {
   txtfile: { isOpen: false, zIndex: initialZIndex, data: null },
   imgfile: { isOpen: false, zIndex: initialZIndex, data: null },
 };
+
+export const techStack = [
+  {
+    category: "Frontend",
+    items: ["React.js", "Next.js", "TypeScript"],
+  },
+  {
+    category: "Styling",
+    items: ["Tailwind CSS", "Bootstrap", "CSS"],
+  },
+  {
+    category: "Backend",
+    items: ["Node.js", "Express", "NestJS", ".NET Core  "],
+  },
+  {
+    category: "Database",
+    items: ["MongoDB", "PostgreSQL", "MySQL", "SQL Server"],
+  },
+  {
+    category: "Dev Tools",
+    items: ["Git", "GitHub", "Docker"],
+  },
+];
