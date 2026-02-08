@@ -2,27 +2,26 @@
 
 import gsap from "gsap";
 import useWindowStore from "@/src/store/window";
+import WindowsControls from "@/src/components/windows/WindowsControls";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import WindowsControls from "@/src/components/windows/WindowsControls";
+import { WindowKey } from "@/constans";
 
 import Draggable from "gsap/Draggable";
 gsap.registerPlugin(Draggable);
 
 interface WindowWrapperProps {
   Component: React.ComponentType<any>;
-  windowKey: string;
-  titleHeader: string;
+  windowKey: WindowKey;
 }
 
 export default function WindowWrapper({
   Component,
   windowKey,
-  titleHeader,
 }: WindowWrapperProps) {
   const Wrapped: React.FC<any> = (props) => {
     const { windows, focusWindow } = useWindowStore();
-    const { zIndex, isOpen } = windows[windowKey as keyof typeof windows];
+    const { zIndex, isOpen } = windows[windowKey];
     const windowRef = useRef<HTMLDivElement>(null);
     const windowHeaderRef = useRef<HTMLDivElement>(null);
 
@@ -41,13 +40,13 @@ export default function WindowWrapper({
 
     useGSAP(() => {
       const windowEl = windowRef.current;
-      const headerEl = windowHeaderRef.current;
+      if (!windowEl) return;
 
-      if (!windowEl || !headerEl) return;
+      const headerEl = windowEl.querySelector(".window-header");
+      if (!headerEl) return;
 
       const [instance] = Draggable.create(windowEl, {
         trigger: headerEl,
-        onPress: () => focusWindow(windowKey as keyof typeof windows),
       });
 
       return () => instance.kill();
@@ -55,6 +54,7 @@ export default function WindowWrapper({
 
     return (
       <section
+        onClick={() => focusWindow(windowKey)}
         id={windowKey}
         ref={windowRef}
         style={{
@@ -63,13 +63,6 @@ export default function WindowWrapper({
         }}
         className="absolute"
       >
-        <div id="window-header" ref={windowHeaderRef}>
-          <WindowsControls target={windowKey} />
-          <h2 className="font-bold text-sm text-center w-full">
-            {titleHeader}
-          </h2>
-        </div>
-
         <Component {...props} />
       </section>
     );

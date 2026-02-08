@@ -3,10 +3,16 @@
 import { techStack } from "@/constans";
 import WindowWrapper from "@/src/hoc/WindowWrapper";
 import { Check } from "lucide-react";
+import WindowsControls from "./WindowsControls";
 
 function Terminal() {
   return (
     <>
+      <div className="window-header">
+        <WindowsControls target="terminal" />
+        <h2 className="font-bold text-sm text-center w-full">Tech Stack</h2>
+      </div>
+
       <div className="text-sm font-roboto p-5">
         <div className="flex items-center ms-10">
           <p className="w-32">Category</p>
@@ -39,7 +45,6 @@ function Terminal() {
 const TerminalWindow = WindowWrapper({
   Component: Terminal,
   windowKey: "terminal",
-  titleHeader: "Tech Stack",
 });
 
 export default TerminalWindow;

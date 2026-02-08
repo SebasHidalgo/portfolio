@@ -1,8 +1,13 @@
+"use client"
+
 import dayjs from "dayjs";
 import Image from "next/image";
 import { navIcons, navLinks } from "@/constans";
+import useWindowStore from "@/src/store/window";
 
 export default function Navbar() {
+  const { openWindow } = useWindowStore();
+
   return (
     <nav>
       <div>
@@ -16,7 +21,7 @@ export default function Navbar() {
 
         <ul>
           {navLinks.map((link) => (
-            <li key={link.id}>
+            <li key={link.id} onClick={() => openWindow(link.type)}>
               <p>{link.name}</p>
             </li>
           ))}
@@ -39,6 +44,7 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+        
 
         <time>{dayjs().format("ddd MMM D h:mm A")}</time>
       </div>

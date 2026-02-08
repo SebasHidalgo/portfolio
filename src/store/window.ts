@@ -1,13 +1,18 @@
-import { initialZIndex, windowConfig } from "@/constans";
+import {
+  initialZIndex,
+  windowConfig,
+  WindowInstance,
+  WindowKey,
+} from "@/constans";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 interface WindowState {
-  windows: typeof windowConfig;
+  windows: Record<WindowKey, WindowInstance>;
   nextZIndex: number;
-  openWindow: (key: keyof typeof windowConfig, data?: any) => void;
-  closeWindow: (key: keyof typeof windowConfig) => void;
-  focusWindow: (key: keyof typeof windowConfig) => void;
+  openWindow: (key: WindowKey, data?: any) => void;
+  closeWindow: (key: WindowKey) => void;
+  focusWindow: (key: WindowKey) => void;
 }
 
 const useWindowStore = create<WindowState>()(
@@ -15,7 +20,7 @@ const useWindowStore = create<WindowState>()(
     windows: windowConfig,
     nextZIndex: initialZIndex + 1,
 
-    openWindow: (key: keyof typeof windowConfig, data = null) =>
+    openWindow: (key: WindowKey, data = null) =>
       set((state) => {
         const win = state.windows[key];
         if (!win) return;
@@ -26,7 +31,7 @@ const useWindowStore = create<WindowState>()(
         state.nextZIndex++;
       }),
 
-    closeWindow: (key: keyof typeof windowConfig) =>
+    closeWindow: (key: WindowKey) =>
       set((state) => {
         const win = state.windows[key];
         if (!win) return;
@@ -36,11 +41,11 @@ const useWindowStore = create<WindowState>()(
         win.data = null;
       }),
 
-    focusWindow: (key: keyof typeof windowConfig) =>
+    focusWindow: (key: WindowKey) =>
       set((state) => {
         const win = state.windows[key];
         if (!win) return;
-        
+
         win.zIndex = state.nextZIndex++;
       }),
   })),

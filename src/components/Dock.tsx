@@ -1,7 +1,7 @@
 "use client";
 
 import gsap from "gsap";
-import { dockApps } from "@/constans";
+import { dockApps, WindowKey } from "@/constans";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 import { Tooltip } from "react-tooltip";
@@ -9,7 +9,6 @@ import useWindowStore from "@/src/store/window";
 
 export default function Dock() {
   const { openWindow, closeWindow, windows } = useWindowStore();
-  type WindowKey = keyof typeof windows;
 
   const dockRef = useRef<HTMLDivElement>(null);
 
@@ -66,8 +65,6 @@ export default function Dock() {
     } else {
       openWindow(id);
     }
-
-    console.log(windows);
   };
 
   return (
@@ -89,7 +86,7 @@ export default function Dock() {
               data-tooltip-content={app.name}
               data-tooltip-delay-show={150}
               disabled={!app.canOpen}
-              onClick={() => toggleApp(app.id as WindowKey, app.canOpen)}
+              onClick={() => toggleApp(app.id, app.canOpen)}
             >
               <img
                 src={app.icon}
@@ -99,6 +96,7 @@ export default function Dock() {
             </button>
           </div>
         ))}
+
         <Tooltip
           id="dock-tooltip"
           place="top"

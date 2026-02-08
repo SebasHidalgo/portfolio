@@ -1,15 +1,44 @@
-export const navLinks = [
+export const initialZIndex = 1000;
+
+export const windowConfig = {
+  finder: { isOpen: false, zIndex: initialZIndex, data: null },
+  contact: { isOpen: false, zIndex: initialZIndex, data: null },
+  resume: { isOpen: false, zIndex: initialZIndex, data: null },
+  safari: { isOpen: false, zIndex: initialZIndex, data: null },
+  photos: { isOpen: false, zIndex: initialZIndex, data: null },
+  terminal: { isOpen: false, zIndex: initialZIndex, data: null },
+  txtfile: { isOpen: false, zIndex: initialZIndex, data: null },
+  imgfile: { isOpen: false, zIndex: initialZIndex, data: null },
+  trash : { isOpen: false, zIndex: initialZIndex, data: null },
+} as const;
+
+export type WindowInstance = {
+  isOpen: boolean;
+  zIndex: number;
+  data: any;
+};
+
+export type WindowKey = keyof typeof windowConfig;
+
+export const navLinks: {
+  id: number;
+  name: string;
+  type: WindowKey;
+}[] = [
   {
     id: 1,
-    name: "Portfolio",
+    name: "Projects",
+    type: "finder",
   },
   {
     id: 2,
     name: "Contact",
+    type: "contact",
   },
   {
     id: 3,
-    name: "Projects",
+    name: "Resume",
+    type: "resume",
   },
 ];
 
@@ -35,8 +64,14 @@ export const navIcons = [
     isClickable: true,
   },
 ];
+export type DockAppKey = WindowKey | "trash";
 
-export const dockApps = [
+export const dockApps: {
+  id: WindowKey;
+  name: string;
+  icon: string;
+  canOpen: boolean;
+}[] = [
   {
     id: "finder",
     name: "Portfolio",
@@ -74,19 +109,6 @@ export const dockApps = [
     canOpen: false,
   },
 ];
-
-export const initialZIndex = 1000;
-
-export const windowConfig = {
-  finder: { isOpen: false, zIndex: initialZIndex, data: null },
-  contact: { isOpen: false, zIndex: initialZIndex, data: null },
-  resume: { isOpen: false, zIndex: initialZIndex, data: null },
-  safari: { isOpen: false, zIndex: initialZIndex, data: null },
-  photos: { isOpen: false, zIndex: initialZIndex, data: null },
-  terminal: { isOpen: false, zIndex: initialZIndex, data: null },
-  txtfile: { isOpen: false, zIndex: initialZIndex, data: null },
-  imgfile: { isOpen: false, zIndex: initialZIndex, data: null },
-};
 
 export const techStack = [
   {
