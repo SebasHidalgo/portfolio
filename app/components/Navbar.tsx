@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import GithubPath from "./svg/GithubSVG";
+import LinkedinPath from "./svg/LinkedinSVG";
 
 const navLinks = [
   { href: "#about", label: "Sobre Mí" },
@@ -38,179 +40,74 @@ export default function Navbar() {
 
   return (
     <nav
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        transition: "all 0.3s ease",
-        background: scrolled ? "rgba(10, 10, 15, 0.85)" : "transparent",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none",
-        padding: "0 2rem",
-      }}
+      className={`
+        fixed top-0 left-0 right-0 z-1000 
+        transition-all duration-300 
+        px-8
+        ${
+          scrolled
+            ? "bg-[rgba(10,10,15,0.85)] backdrop-blur-[20px] border-b border-white/10"
+            : "bg-transparent"
+        }
+      `}
     >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "72px",
-        }}
-      >
+      <div className="max-w-[1200px] mx-auto flex items-center justify-between h-[72px]">
         {/* Logo */}
-        <Link href="/" style={{ textDecoration: "none" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
+        <Link href="/" className="no-underline">
+          <div className="flex items-center gap-2">
             <div
-              style={{
-                width: "38px",
-                height: "38px",
-                borderRadius: "10px",
-                background: "linear-gradient(135deg, #4f8ef7, #a855f7)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "1rem",
-                boxShadow: "0 0 20px rgba(79,142,247,0.4)",
-              }}
+              className="w-[38px] h-[38px] rounded-[10px] bg-linear-to-br from-primary to-secondary flex items-center 
+            justify-center font-bold text-base shadow-[0_0_20px_rgba(79,142,247,0.4)]"
             >
-              SB
+              GH
             </div>
           </div>
         </Link>
 
         {/* Desktop Nav */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "2rem",
-          }}
-          className="desktop-nav"
-        >
+        <div className="desktop-nav flex items-center gap-8 max-md:hidden">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="nav-link"
-              style={{
-                color:
-                  activeSection === link.href.slice(1) ? "#f0f0ff" : undefined,
-              }}
+              className={`nav-link transition-colors duration-300 ${
+                activeSection === link.href.slice(1) ? "text-foreground" : ""
+              }`}
             >
               {link.label}
             </a>
           ))}
 
           {/* Social icons */}
-          <div style={{ display: "flex", gap: "0.75rem" }}>
+          <div className="flex gap-3">
             <a
-              href="https://github.com"
+              href="https://github.com/sebashidalgo"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "36px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                transition: "all 0.3s ease",
-                color: "#8892b0",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#f0f0ff";
-                (e.currentTarget as HTMLElement).style.borderColor =
-                  "rgba(79,142,247,0.5)";
-                (e.currentTarget as HTMLElement).style.background =
-                  "rgba(79,142,247,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#8892b0";
-                (e.currentTarget as HTMLElement).style.borderColor =
-                  "rgba(255,255,255,0.1)";
-                (e.currentTarget as HTMLElement).style.background =
-                  "rgba(255,255,255,0.06)";
-              }}
               aria-label="GitHub"
+              className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 border border-white/10 text-muted transition-all duration-300 
+              hover:text-foreground hover:border-[rgba(79,142,247,0.5)] hover:bg-[rgba(79,142,247,0.1)]"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-              </svg>
+              <GithubPath width={18} height={18} />
             </a>
+
             <a
-              href="https://linkedin.com"
+              href="https://linkedin.com/in/guillermo-hidalgo-alvarado"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "36px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                transition: "all 0.3s ease",
-                color: "#8892b0",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#f0f0ff";
-                (e.currentTarget as HTMLElement).style.borderColor =
-                  "rgba(79,142,247,0.5)";
-                (e.currentTarget as HTMLElement).style.background =
-                  "rgba(79,142,247,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#8892b0";
-                (e.currentTarget as HTMLElement).style.borderColor =
-                  "rgba(255,255,255,0.1)";
-                (e.currentTarget as HTMLElement).style.background =
-                  "rgba(255,255,255,0.06)";
-              }}
               aria-label="LinkedIn"
+              className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 border border-white/10 text-muted transition-all duration-300 
+              hover:text-foreground hover:border-[rgba(79,142,247,0.5)] hover:bg-[rgba(79,142,247,0.1)]"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-              </svg>
+              <LinkedinPath width={18} height={18} />
             </a>
           </div>
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile button */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          style={{
-            display: "none",
-            background: "none",
-            border: "none",
-            color: "#f0f0ff",
-            cursor: "pointer",
-            padding: "8px",
-          }}
-          className="mobile-menu-btn"
+          className="mobile-menu-btn hidden max-md:flex bg-none border-none text-foreground cursor-pointer p-2"
           aria-label="Toggle menu"
         >
           <svg
@@ -230,60 +127,47 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       {mobileOpen && (
         <div
-          style={{
-            background: "rgba(10, 10, 15, 0.95)",
-            backdropFilter: "blur(20px)",
-            padding: "1.5rem 2rem",
-            borderTop: "1px solid rgba(255,255,255,0.06)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.25rem",
-          }}
+          className="
+            bg-[rgba(10,10,15,0.95)]
+            backdrop-blur-[20px]
+            px-8 py-6
+            border-t border-white/10
+            flex flex-col gap-5
+          "
         >
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="nav-link"
+              className="nav-link text-base"
               onClick={() => setMobileOpen(false)}
-              style={{ fontSize: "1rem" }}
             >
               {link.label}
             </a>
           ))}
-          <div
-            style={{ display: "flex", gap: "0.75rem", paddingTop: "0.5rem" }}
-          >
+
+          <div className="flex gap-3 pt-2 text-muted">
             <a
-              href="https://github.com"
+              href="https://github.com/sebashidalgo"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#8892b0" }}
             >
               GitHub
             </a>
-            <span style={{ color: "#4a5568" }}>|</span>
+            <span className="text-subtle">|</span>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/guillermo-hidalgo-alvarado"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#8892b0" }}
             >
               LinkedIn
             </a>
           </div>
         </div>
       )}
-
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
-        }
-      `}</style>
     </nav>
   );
 }

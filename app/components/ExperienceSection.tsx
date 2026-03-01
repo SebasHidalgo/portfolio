@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const experiences = [
+const defaultExperiences = [
   {
     title: "Senior Full Stack Developer",
     company: "TechCorp Innovation",
@@ -46,7 +46,7 @@ const experiences = [
   },
 ];
 
-const education = [
+const defaultEducation = [
   {
     degree: "Ingeniería en Sistemas Computacionales",
     institution: "Instituto Tecnológico de México",
@@ -61,7 +61,11 @@ const education = [
   },
 ];
 
-export default function ExperienceSection() {
+export default function ExperienceSection({
+  experiences: dbExperiences = [],
+}: {
+  experiences?: any[];
+}) {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -77,82 +81,78 @@ export default function ExperienceSection() {
     return () => observer.disconnect();
   }, []);
 
+  const displayExperiences =
+    dbExperiences.length > 0
+      ? dbExperiences
+          .filter((e) => !e.isEducation)
+          .map((e) => ({
+            title: e.position,
+            company: e.company,
+            period: e.period,
+            location: "", // Add location to DB if needed later
+            color: e.color || "#4f8ef7",
+            achievements: e.achievements || [],
+            tech: e.techStack || [],
+          }))
+      : defaultExperiences;
+
+  const displayEducation =
+    dbExperiences.length > 0
+      ? dbExperiences
+          .filter((e) => e.isEducation)
+          .map((e) => ({
+            degree: e.position,
+            institution: e.company,
+            period: e.period,
+            gpa: e.achievements?.[0] || "",
+          }))
+      : defaultEducation;
+
   return (
     <section
       id="experience"
       ref={sectionRef}
-      style={{
-        position: "relative",
-        zIndex: 1,
-        padding: "100px 2rem",
-        background:
-          "linear-gradient(180deg, transparent, rgba(168,85,247,0.03), transparent)",
-      }}
+      className="relative z-1 py-[100px] px-8 bg-[linear-gradient(180deg,transparent,rgba(168,85,247,0.03),transparent)]"
     >
-      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+      <div className="max-w-[1100px] mx-auto">
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "4rem" }}>
-          <p
-            style={{
-              color: "#22d3ee",
-              fontFamily: "JetBrains Mono, monospace",
-              fontSize: "0.85rem",
-              marginBottom: "0.75rem",
-              letterSpacing: "0.2em",
-            }}
-          >
+        <div className="text-center mb-16">
+          <p className="text-accent font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
             // 03. EXPERIENCIA
           </p>
+
           <h2 className="section-title gradient-text-blue-purple">
             Trayectoria Profesional
           </h2>
+
           <p className="section-subtitle">
             Mi viaje a través del mundo del desarrollo de software
           </p>
         </div>
 
         {/* Timeline */}
-        <div
-          style={{
-            position: "relative",
-            paddingBottom: "2rem",
-          }}
-          className="timeline-container"
-        >
+        <div className="relative pb-8 timeline-container">
           {/* Vertical line */}
           <div
-            className="timeline-line"
-            style={{
-              opacity: visible ? 1 : 0,
-              transition: "opacity 1s ease",
-            }}
+            className={`timeline-line transition-opacity duration-1000 ${
+              visible ? "opacity-100" : "opacity-0"
+            }`}
           />
 
-          {experiences.map((exp, i) => (
+          {displayExperiences.map((exp, i) => (
             <div
               key={i}
-              style={{
-                display: "flex",
-                justifyContent: i % 2 === 0 ? "flex-start" : "flex-end",
-                marginBottom: "3rem",
-                position: "relative",
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(30px)",
-                transition: `all 0.7s ease ${i * 0.2}s`,
-              }}
-              className="timeline-item"
+              className={`timeline-item relative flex mb-12 transition-all duration-700 ${
+                i % 2 === 0 ? "justify-start" : "justify-end"
+              } ${
+                visible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-[30px]"
+              }`}
+              style={{ transitionDelay: `${i * 0.2}s` }}
             >
               {/* Timeline dot */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  top: "24px",
-                  transform: "translateX(-50%)",
-                  zIndex: 10,
-                }}
-                className="timeline-dot-wrapper"
-              >
+              <div className="absolute left-1/2 top-6 -translate-x-1/2 z-10 timeline-dot-wrapper">
                 <div
                   className="timeline-dot"
                   style={{
@@ -164,42 +164,26 @@ export default function ExperienceSection() {
 
               {/* Card */}
               <div
-                className="glass"
-                style={{
-                  width: "46%",
-                  padding: "1.5rem",
-                  borderRadius: "16px",
-                  borderColor: `${exp.color}22`,
-                  transition: "all 0.3s ease",
-                  marginLeft: i % 2 === 0 ? "0" : "auto",
-                  marginRight: i % 2 === 0 ? "auto" : "0",
-                }}
+                className={`glass w-[46%] p-6 rounded-2xl border transition-all duration-300 ${
+                  i % 2 === 0 ? "mr-auto" : "ml-auto"
+                }`}
+                style={{ borderColor: `${exp.color}22` }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    `${exp.color}55`;
-                  (e.currentTarget as HTMLElement).style.boxShadow =
-                    `0 0 30px ${exp.color}22`;
+                  e.currentTarget.style.borderColor = `${exp.color}55`;
+                  e.currentTarget.style.boxShadow = `0 0 30px ${exp.color}22`;
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    `${exp.color}22`;
-                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  e.currentTarget.style.borderColor = `${exp.color}22`;
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               >
                 {/* Period badge */}
                 <div
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75rem] font-mono mb-3 border"
                   style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "4px 12px",
                     background: `${exp.color}15`,
-                    border: `1px solid ${exp.color}30`,
-                    borderRadius: "50px",
-                    fontSize: "0.75rem",
+                    borderColor: `${exp.color}30`,
                     color: exp.color,
-                    fontFamily: "JetBrains Mono, monospace",
-                    marginBottom: "0.75rem",
                   }}
                 >
                   <svg
@@ -218,78 +202,49 @@ export default function ExperienceSection() {
                   {exp.period}
                 </div>
 
-                <h3
-                  style={{
-                    fontSize: "1.1rem",
-                    fontWeight: 700,
-                    color: "#f0f0ff",
-                    marginBottom: "4px",
-                  }}
-                >
+                <h3 className="text-[1.1rem] font-bold text-foreground mb-1">
                   {exp.title}
                 </h3>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "1rem",
-                  }}
-                >
+
+                <div className="flex items-center gap-2 mb-4">
                   <span
-                    style={{
-                      fontSize: "0.9rem",
-                      color: exp.color,
-                      fontWeight: 600,
-                    }}
+                    className="text-[0.9rem] font-semibold"
+                    style={{ color: exp.color }}
                   >
                     {exp.company}
                   </span>
-                  <span style={{ color: "#4a5568" }}>·</span>
-                  <span style={{ fontSize: "0.8rem", color: "#8892b0" }}>
+
+                  <span className="text-muted">·</span>
+
+                  <span className="text-[0.8rem] text-muted">
                     {exp.location}
                   </span>
                 </div>
 
-                <ul
-                  style={{
-                    listStyle: "none",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  {exp.achievements.map((a, j) => (
+                <ul className="list-none flex flex-col gap-2 mb-4">
+                  {exp.achievements.map((a: string, j: number) => (
                     <li
                       key={j}
-                      style={{
-                        display: "flex",
-                        gap: "8px",
-                        fontSize: "0.85rem",
-                        color: "#8892b0",
-                        lineHeight: 1.6,
-                      }}
+                      className="flex gap-2 text-[0.85rem] text-muted leading-[1.6]"
                     >
-                      <span style={{ color: exp.color, flexShrink: 0 }}>▹</span>
+                      <span className="shrink-0" style={{ color: exp.color }}>
+                        ▹
+                      </span>
                       {a}
                     </li>
                   ))}
                 </ul>
 
                 {/* Tech stack */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                  {exp.tech.map((t) => (
+                <div className="flex flex-wrap gap-1.5">
+                  {exp.tech.map((t: string) => (
                     <span
                       key={t}
+                      className="px-2.5 py-[3px] rounded-full text-[0.7rem] font-mono border"
                       style={{
-                        padding: "3px 10px",
                         background: `${exp.color}12`,
-                        border: `1px solid ${exp.color}25`,
-                        borderRadius: "50px",
-                        fontSize: "0.7rem",
+                        borderColor: `${exp.color}25`,
                         color: exp.color,
-                        fontFamily: "JetBrains Mono, monospace",
                       }}
                     >
                       {t}
@@ -302,85 +257,38 @@ export default function ExperienceSection() {
         </div>
 
         {/* Education */}
-        <div style={{ marginTop: "4rem" }}>
-          <h3
-            style={{
-              fontSize: "1.4rem",
-              fontWeight: 700,
-              marginBottom: "1.5rem",
-              textAlign: "center",
-              color: "#f0f0ff",
-            }}
-          >
+        <div className="mt-16">
+          <h3 className="text-[1.4rem] font-bold mb-6 text-center text-foreground">
             Formación Académica
           </h3>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "1rem",
-            }}
-          >
-            {education.map((edu, i) => (
+
+          <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+            {displayEducation.map((edu, i) => (
               <div
                 key={i}
-                className="glass"
-                style={{
-                  padding: "1.5rem",
-                  borderRadius: "12px",
-                  display: "flex",
-                  gap: "1rem",
-                  alignItems: "flex-start",
-                  opacity: visible ? 1 : 0,
-                  transform: visible ? "translateY(0)" : "translateY(20px)",
-                  transition: `all 0.6s ease ${0.6 + i * 0.2}s`,
-                }}
+                className={`glass p-6 rounded-xl flex gap-4 items-start transition-all duration-700 ${
+                  visible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-5"
+                }`}
+                style={{ transitionDelay: `${0.6 + i * 0.2}s` }}
               >
-                <div
-                  style={{
-                    width: "44px",
-                    height: "44px",
-                    borderRadius: "10px",
-                    background: "linear-gradient(135deg, #4f8ef7, #a855f7)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.25rem",
-                    flexShrink: 0,
-                  }}
-                >
+                <div className="w-11 h-11 rounded-[10px] bg-linear-to-br from-primary to-secondary flex items-center justify-center text-xl shrink-0">
                   🎓
                 </div>
+
                 <div>
-                  <h4
-                    style={{
-                      fontSize: "0.95rem",
-                      fontWeight: 600,
-                      color: "#f0f0ff",
-                      marginBottom: "4px",
-                    }}
-                  >
+                  <h4 className="text-[0.95rem] font-semibold text-foreground mb-1">
                     {edu.degree}
                   </h4>
-                  <p
-                    style={{
-                      fontSize: "0.85rem",
-                      color: "#4f8ef7",
-                      marginBottom: "4px",
-                    }}
-                  >
+
+                  <p className="text-[0.85rem] text-primary mb-1">
                     {edu.institution}
                   </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "1rem",
-                      fontSize: "0.8rem",
-                      color: "#8892b0",
-                    }}
-                  >
+
+                  <div className="flex gap-4 text-[0.8rem] text-muted">
                     <span>{edu.period}</span>
-                    <span style={{ color: "#22d3ee" }}>{edu.gpa}</span>
+                    <span className="text-accent">{edu.gpa}</span>
                   </div>
                 </div>
               </div>
@@ -388,18 +296,6 @@ export default function ExperienceSection() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .timeline-line { left: 20px !important; }
-          .timeline-dot-wrapper { left: 20px !important; }
-          .timeline-item > div:not(.timeline-dot-wrapper) {
-            width: calc(100% - 50px) !important;
-            margin-left: 50px !important;
-            margin-right: 0 !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

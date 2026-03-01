@@ -102,18 +102,5 @@ export default function ParticleCanvas() {
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      id="particle-canvas"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        pointerEvents: "none",
-        zIndex: 0,
-        opacity: 0.6,
-      }}
-    />
-  );
+  return <canvas ref={canvasRef} id="particle-canvas" />;
 }

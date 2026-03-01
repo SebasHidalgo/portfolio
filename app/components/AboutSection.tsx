@@ -9,7 +9,7 @@ const traits = [
   { icon: "🤝", title: "Team Player", desc: "Colaboración primero" },
 ];
 
-const skills = [
+const staticSkills = [
   { name: "React / Next.js", level: 92, color: "#4f8ef7" },
   { name: "TypeScript", level: 88, color: "#a855f7" },
   { name: "Node.js / Express", level: 85, color: "#22d3ee" },
@@ -18,7 +18,16 @@ const skills = [
   { name: "GraphQL", level: 70, color: "#22d3ee" },
 ];
 
-export default function AboutSection() {
+export default function AboutSection({ skills = [] }: { skills?: any[] }) {
+  const displaySkills =
+    skills.length > 0
+      ? skills.map((s, i) => ({
+          name: s.name,
+          level: s.level,
+          category: s.category,
+          color: i % 3 === 0 ? "#4f8ef7" : i % 3 === 1 ? "#a855f7" : "#22d3ee",
+        }))
+      : staticSkills;
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -38,29 +47,19 @@ export default function AboutSection() {
     <section
       id="about"
       ref={sectionRef}
-      style={{
-        position: "relative",
-        zIndex: 1,
-        padding: "100px 2rem",
-      }}
+      className="relative z-1 py-[100px] px-8 max-md:py-[60px]"
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+      <div className="max-w-[1200px] mx-auto">
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "4rem" }}>
-          <p
-            style={{
-              color: "#4f8ef7",
-              fontFamily: "JetBrains Mono, monospace",
-              fontSize: "0.85rem",
-              marginBottom: "0.75rem",
-              letterSpacing: "0.2em",
-            }}
-          >
+        <div className="text-center mb-16">
+          <p className="text-primary font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
             // 01. SOBRE MÍ
           </p>
+
           <h2 className="section-title gradient-text-blue-purple">
             Conóceme Mejor
           </h2>
+
           <p className="section-subtitle">
             Desarrollador apasionado por crear experiencias digitales
             extraordinarias
@@ -68,141 +67,53 @@ export default function AboutSection() {
         </div>
 
         {/* Main grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "4rem",
-            alignItems: "start",
-          }}
-          className="about-grid"
-        >
+        <div className="grid grid-cols-2 gap-16 items-start max-md:grid-cols-1 about-grid">
           {/* Left - Avatar and traits */}
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "2rem",
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(-40px)",
-              transition: "all 0.8s ease",
-            }}
+            className={`
+          flex flex-col items-center gap-8
+          transition-all duration-800 ease
+          ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}
+        `}
           >
             {/* Avatar */}
-            <div style={{ position: "relative" }}>
-              <div
-                style={{
-                  width: "220px",
-                  height: "220px",
-                  borderRadius: "50%",
-                  background:
-                    "linear-gradient(135deg, #4f8ef7 0%, #a855f7 50%, #22d3ee 100%)",
-                  padding: "3px",
-                  animation: "spin-slow 20s linear infinite",
-                }}
-              >
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: "50%",
-                    background: "#0d0d1a",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "5rem",
-                  }}
-                >
+            <div className="relative">
+              <div className="w-[220px] h-[220px] rounded-full p-[3px] animate-spin-slow bg-linear-to-br from-primary via-secondary to-accent">
+                <div className="w-full h-full rounded-full bg-background flex items-center justify-center text-[5rem]">
                   👨‍💻
                 </div>
               </div>
+
               {/* Floating badges */}
-              <div
-                className="glass"
-                style={{
-                  position: "absolute",
-                  top: "-10px",
-                  right: "-20px",
-                  padding: "8px 14px",
-                  borderRadius: "50px",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                  color: "#4f8ef7",
-                  whiteSpace: "nowrap",
-                  animation: "float 4s ease-in-out infinite",
-                }}
-              >
+              <div className="glass absolute -top-[10px] -right-[20px] px-[14px] py-[8px] rounded-full text-[0.8rem] font-semibold text-primary whitespace-nowrap animate-float">
                 ⚡ React Expert
               </div>
-              <div
-                className="glass"
-                style={{
-                  position: "absolute",
-                  bottom: "0",
-                  left: "-30px",
-                  padding: "8px 14px",
-                  borderRadius: "50px",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                  color: "#a855f7",
-                  whiteSpace: "nowrap",
-                  animation: "float 5s ease-in-out infinite 1s",
-                }}
-              >
+
+              <div className="glass absolute bottom-0 -left-[30px] px-[14px] py-[8px] rounded-full text-[0.8rem] font-semibold text-secondary whitespace-nowrap animate-float [animation-delay:1s]">
                 🔗 Open Source
               </div>
             </div>
 
             {/* Traits */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-                width: "100%",
-              }}
-            >
+            <div className="grid grid-cols-2 gap-4 w-full">
               {traits.map((t, i) => (
                 <div
                   key={i}
-                  className="glass"
-                  style={{
-                    padding: "1rem",
-                    borderRadius: "12px",
-                    textAlign: "center",
-                    transition: "all 0.3s ease",
-                    cursor: "default",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform =
-                      "translateY(-4px)";
-                    (e.currentTarget as HTMLElement).style.borderColor =
-                      "rgba(79,142,247,0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform =
-                      "translateY(0)";
-                    (e.currentTarget as HTMLElement).style.borderColor =
-                      "rgba(255,255,255,0.08)";
-                  }}
+                  className="
+                glass p-4 rounded-xl text-center
+                transition-all duration-300
+                hover:-translate-y-1
+                hover:border-primary/30
+                cursor-default
+              "
                 >
-                  <div style={{ fontSize: "1.5rem", marginBottom: "4px" }}>
-                    {t.icon}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.85rem",
-                      fontWeight: 600,
-                      color: "#f0f0ff",
-                      marginBottom: "2px",
-                    }}
-                  >
+                  <div className="text-[1.5rem] mb-1">{t.icon}</div>
+
+                  <div className="text-[0.85rem] font-semibold text-foreground mb-[2px]">
                     {t.title}
                   </div>
-                  <div style={{ fontSize: "0.75rem", color: "#8892b0" }}>
-                    {t.desc}
-                  </div>
+
+                  <div className="text-[0.75rem] text-subtle">{t.desc}</div>
                 </div>
               ))}
             </div>
@@ -210,44 +121,24 @@ export default function AboutSection() {
 
           {/* Right - Bio and skills */}
           <div
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(40px)",
-              transition: "all 0.8s ease 0.2s",
-            }}
+            className={`
+          transition-all duration-800ms ease delay-200ms
+          ${visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}
+        `}
           >
-            <h3
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                marginBottom: "1rem",
-                color: "#f0f0ff",
-              }}
-            >
+            <h3 className="text-[1.5rem] font-bold mb-4 text-foreground">
               Una historia de{" "}
               <span className="gradient-text">código y creatividad</span>
             </h3>
-            <p
-              style={{
-                color: "#8892b0",
-                lineHeight: 1.9,
-                marginBottom: "1.25rem",
-                fontSize: "0.95rem",
-              }}
-            >
+
+            <p className="text-muted leading-[1.9] mb-5 text-[0.95rem]">
               Soy un desarrollador Full Stack con pasión por construir
               interfaces futuristas y backends robustos. Con un ojo agudo para
               el diseño y un amor por el código limpio, convierto problemas
               complejos en soluciones elegantes.
             </p>
-            <p
-              style={{
-                color: "#8892b0",
-                lineHeight: 1.9,
-                marginBottom: "2rem",
-                fontSize: "0.95rem",
-              }}
-            >
+
+            <p className="text-muted leading-[1.9] mb-8 text-[0.95rem]">
               Mi viaje involucra aprendizaje constante y empujar los límites de
               la tecnología web moderna. Cuando no estoy programando, estoy
               explorando tendencias en UI/UX, contribuyendo a open source o
@@ -255,55 +146,35 @@ export default function AboutSection() {
             </p>
 
             {/* Skills */}
-            <h4
-              style={{
-                fontSize: "1rem",
-                fontWeight: 600,
-                marginBottom: "1.25rem",
-                color: "#f0f0ff",
-              }}
-            >
+            <h4 className="text-[1rem] font-semibold mb-5 text-foreground">
               Habilidades técnicas
             </h4>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-            >
-              {skills.map((skill, i) => (
+
+            <div className="flex flex-col gap-4">
+              {displaySkills.map((skill, i) => (
                 <div key={i}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "0.85rem",
-                        color: "#c0c8e8",
-                        fontFamily: "JetBrains Mono, monospace",
-                      }}
-                    >
+                  <div className="flex justify-between mb-[6px]">
+                    <span className="text-[0.85rem] text-muted font-mono">
                       {skill.name}
                     </span>
+
                     <span
-                      style={{
-                        fontSize: "0.8rem",
-                        color: skill.color,
-                        fontWeight: 600,
-                        fontFamily: "JetBrains Mono, monospace",
-                      }}
+                      className="text-[0.8rem] font-semibold font-mono"
+                      style={{ color: skill.color }}
                     >
                       {skill.level}%
                     </span>
                   </div>
+
                   <div className="skill-bar">
                     <div
-                      className="skill-fill"
+                      className="skill-fill transition-all duration-700"
                       style={{
                         width: visible ? `${skill.level}%` : "0%",
                         background: `linear-gradient(90deg, ${skill.color}, ${
-                          i % 2 === 0 ? "#a855f7" : "#22d3ee"
+                          i % 2 === 0
+                            ? "var(--color-secondary)"
+                            : "var(--color-accent)"
                         })`,
                         transitionDelay: `${i * 0.1 + 0.3}s`,
                       }}
@@ -314,17 +185,11 @@ export default function AboutSection() {
             </div>
 
             {/* Download CV */}
-            <div style={{ marginTop: "2rem" }}>
+            <div className="mt-8">
               <a
                 href="/cv.pdf"
                 download
-                className="btn-primary"
-                style={{
-                  textDecoration: "none",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
+                className="btn-primary inline-flex items-center gap-2 no-underline"
               >
                 <svg
                   width="16"
@@ -342,14 +207,6 @@ export default function AboutSection() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .about-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sebastian | Full Stack Developer Portfolio",
+  title: "Guillermo H. | Portfolio",
   description:
     "Full Stack Developer passionate about building futuristic interfaces and robust backends. Specializing in React, Next.js, Node.js, and modern web technologies.",
   keywords: [
@@ -26,9 +26,9 @@ export const metadata: Metadata = {
     "TypeScript",
     "Portfolio",
   ],
-  authors: [{ name: "Sebastian" }],
+  authors: [{ name: "Guillermo" }],
   openGraph: {
-    title: "Sebastian | Full Stack Developer",
+    title: "Guillermo | Full Stack Developer",
     description: "Building the future, one line of code at a time.",
     type: "website",
   },
