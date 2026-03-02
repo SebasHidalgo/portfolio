@@ -10,6 +10,7 @@ import {
   deleteExperience,
 } from "@/lib/database/tables/experience";
 import { ActionButtons, EmptyState } from "@/app/admin/components/ui";
+import { Plus, X } from "lucide-react";
 
 const EMPTY_EXP = {
   company: "",
@@ -120,113 +121,59 @@ export default function ExperienceClient({
   return (
     <>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 36,
-        }}
-      >
+      <div className="flex items-center justify-between mb-9">
         <div>
           <p
-            style={{
-              color: accent,
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              marginBottom: 6,
-            }}
+            className="text-[11px] font-bold uppercase tracking-[0.18em] mb-1.5"
+            style={{ color: accent }}
           >
             // {String(experiences.length).padStart(2, "00")} items
           </p>
-          <h1
-            style={{
-              color: "#fff",
-              fontSize: 30,
-              fontWeight: 800,
-              margin: 0,
-              lineHeight: 1,
-            }}
-          >
+
+          <h1 className="text-[30px] font-extrabold text-white leading-none">
             Experience
           </h1>
         </div>
+
         <button
           onClick={() => (showForm ? resetForm() : setShowForm(true))}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "12px 22px",
-            borderRadius: 12,
-            border: "none",
-            cursor: "pointer",
-            fontWeight: 700,
-            fontSize: 14,
-            background: showForm
-              ? "rgba(255,255,255,0.07)"
-              : `linear-gradient(135deg,${accent},${accent}99)`,
-            color: showForm ? "#888" : "#fff",
-            boxShadow: showForm ? "none" : `0 0 24px ${glow}`,
-            transition: "all 0.2s",
-          }}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200
+        ${showForm ? "bg-white/10 text-gray-400" : "text-white"}
+      `}
+          style={
+            showForm
+              ? {}
+              : {
+                  background: `linear-gradient(135deg,${accent},${accent}99)`,
+                  boxShadow: `0 0 24px ${glow}`,
+                }
+          }
         >
-          <span className="msym" style={{ fontSize: 20 }}>
-            {showForm ? "close" : "add"}
-          </span>
+          {showForm ? <X size={20} /> : <Plus size={20} />}
           {showForm ? "Cancel" : "Add Experience"}
         </button>
       </div>
 
       {/* Form */}
       {showForm && (
-        <div
-          className="adm-glass"
-          style={{
-            borderRadius: 20,
-            overflow: "hidden",
-            marginBottom: 40,
-            position: "relative",
-          }}
-        >
+        <div className="adm-glass rounded-2xl overflow-hidden mb-10 relative">
           <div
-            style={{
-              height: 3,
-              background: `linear-gradient(90deg,${accent},${glow})`,
-            }}
+            className="h-[3px]"
+            style={{ background: `linear-gradient(90deg,${accent},${glow})` }}
           />
-          <div style={{ padding: "28px 32px" }}>
-            <h2
-              style={{
-                color: "#fff",
-                fontWeight: 700,
-                marginBottom: 24,
-                fontSize: 18,
-              }}
-            >
+
+          <div className="px-8 py-7">
+            <h2 className="text-lg font-bold text-white mb-6">
               {editingId ? "Edit Experience" : "New Experience"}
             </h2>
+
             <form onSubmit={handleSubmit}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 18,
-                }}
-              >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Company */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Company *
                   </label>
@@ -239,17 +186,12 @@ export default function ExperienceClient({
                     required
                   />
                 </div>
+
+                {/* Position */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Position *
                   </label>
@@ -262,17 +204,12 @@ export default function ExperienceClient({
                     required
                   />
                 </div>
+
+                {/* Location */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Location *
                   </label>
@@ -285,45 +222,30 @@ export default function ExperienceClient({
                     required
                   />
                 </div>
+
+                {/* Color Tag */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Color Tag
                   </label>
                   <input
                     type="color"
-                    className="adm-input"
-                    style={{
-                      height: 46,
-                      padding: "6px 10px",
-                      cursor: "pointer",
-                    }}
+                    className="adm-input h-[46px] px-3 py-1.5 cursor-pointer"
                     value={expData.color}
                     onChange={(e) =>
                       setExpData({ ...expData, color: e.target.value })
                     }
                   />
                 </div>
+
+                {/* Start Date */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Start Date *
                   </label>
@@ -337,17 +259,12 @@ export default function ExperienceClient({
                     required
                   />
                 </div>
+
+                {/* End Date */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     End Date *
                   </label>
@@ -361,42 +278,31 @@ export default function ExperienceClient({
                     required
                   />
                 </div>
-                <div style={{ gridColumn: "1/-1" }}>
+
+                {/* Achievements */}
+                <div className="md:col-span-2">
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Achievements (one per line) *
                   </label>
                   <textarea
-                    className="adm-input adm-input-indigo"
+                    className="adm-input adm-input-indigo resize-y"
                     rows={4}
                     value={expData.achievements}
                     onChange={(e) =>
                       setExpData({ ...expData, achievements: e.target.value })
                     }
                     required
-                    style={{ resize: "vertical" }}
                   />
                 </div>
-                <div style={{ gridColumn: "1/-1" }}>
+
+                {/* Tech Stack */}
+                <div className="md:col-span-2">
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Tech Stack (comma-separated)
                   </label>
@@ -409,21 +315,13 @@ export default function ExperienceClient({
                   />
                 </div>
               </div>
-              <div style={{ marginTop: 24 }}>
+
+              <div className="mt-6">
                 <button
                   type="submit"
                   disabled={createMut.isPending || updateMut.isPending}
-                  style={{
-                    padding: "12px 24px",
-                    borderRadius: 10,
-                    border: "none",
-                    background: accent,
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    cursor: "pointer",
-                    width: "100%",
-                  }}
+                  className="w-full py-3 rounded-lg font-bold text-sm text-white transition disabled:opacity-50"
+                  style={{ background: accent }}
                 >
                   Save Experience
                 </button>
@@ -441,60 +339,37 @@ export default function ExperienceClient({
           onClick={() => setShowForm(true)}
         />
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill,minmax(350px,1fr))",
-            gap: 24,
-          }}
-        >
+        <div className="grid gap-6 grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
           {experiences.map((exp: any) => (
             <div
               key={exp.id}
               className="adm-card"
-              style={{ borderLeft: `4px solid ${exp.color || accent}` }}
+              style={{ borderLeft: `3px solid ${accent}` }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: 6,
-                }}
-              >
-                <h3
-                  style={{
-                    margin: 0,
-                    color: "#fff",
-                    fontSize: 18,
-                    fontWeight: 700,
-                  }}
-                >
-                  {exp.position}
-                </h3>
+              <div className="flex justify-between mb-2">
+                <h3 className="text-lg font-bold text-white">{exp.position}</h3>
+
                 <ActionButtons
                   onEdit={() => startEdit(exp)}
                   onDelete={() => handleDelete(exp.id)}
                   editColor={accent}
                 />
               </div>
-              <p style={{ color: "#aaa", fontSize: 14, marginBottom: 8 }}>
-                {exp.company} &bull; {exp.ubication}
+
+              <p className="text-sm text-gray-400 mb-2">
+                {exp.company} • {exp.ubication}
               </p>
-              <p style={{ color: "#666", fontSize: 12, marginBottom: 16 }}>
+
+              <p className="text-xs text-gray-500 mb-4">
                 {new Date(exp.startDate).toLocaleDateString()} -{" "}
                 {new Date(exp.endDate).toLocaleDateString()}
               </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+
+              <div className="flex flex-wrap gap-1.5">
                 {exp.techStack.map((t: string, i: number) => (
                   <span
                     key={i}
-                    style={{
-                      background: "rgba(255,255,255,0.06)",
-                      color: "#ccc",
-                      padding: "3px 8px",
-                      borderRadius: 6,
-                      fontSize: 10,
-                    }}
+                    className="bg-white/5 text-gray-300 px-2 py-1 rounded-md text-[10px]"
                   >
                     {t}
                   </span>

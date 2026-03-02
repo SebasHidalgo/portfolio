@@ -1,3 +1,5 @@
+import { Edit2, Trash2, Plus } from "lucide-react";
+
 export function ActionButtons({
   onEdit,
   onDelete,
@@ -22,9 +24,7 @@ export function ActionButtons({
           (e.currentTarget.style.background = "rgba(255,255,255,0.05)")
         }
       >
-        <span className="msym" style={{ fontSize: 18 }}>
-          edit
-        </span>
+        <Edit2 size={18} />
       </button>
       <button
         onClick={onDelete}
@@ -37,9 +37,7 @@ export function ActionButtons({
           (e.currentTarget.style.background = "rgba(255,255,255,0.05)")
         }
       >
-        <span className="msym" style={{ fontSize: 18 }}>
-          delete
-        </span>
+        <Trash2 size={18} />
       </button>
     </div>
   );
@@ -55,32 +53,22 @@ export function EmptyState({
   onClick: () => void;
 }) {
   return (
-    <div
-      style={{
-        gridColumn: "1/-1",
-        textAlign: "center",
-        padding: "64px 32px",
-        border: "1px dashed rgba(255,255,255,0.1)",
-        borderRadius: 20,
-      }}
-    >
-      <p style={{ color: "#444", fontSize: 14, marginBottom: 20 }}>
+    <div className="col-span-full text-center px-8 py-16 border border-dashed border-white/10 rounded-[20px]">
+      <p className="text-[#444] text-[14px] mb-5">
         No {label}s found. Create your first one!
       </p>
+
       <button
         onClick={onClick}
+        className="px-6 py-2.5 rounded-[10px] font-bold text-[13px] transition-all duration-200 hover:bg-white/5"
         style={{
-          padding: "10px 24px",
-          borderRadius: 10,
           border: `1px solid ${accent}`,
-          background: "transparent",
           color: accent,
-          fontWeight: 700,
-          fontSize: 13,
-          cursor: "pointer",
         }}
       >
-        + Add {label}
+        <span className="flex items-center gap-2">
+          <Plus size={18} /> Add {label}
+        </span>
       </button>
     </div>
   );

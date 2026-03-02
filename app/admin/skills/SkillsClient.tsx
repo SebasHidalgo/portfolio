@@ -10,6 +10,7 @@ import {
   deleteSkill,
 } from "@/lib/database/tables/skills";
 import { ActionButtons, EmptyState } from "@/app/admin/components/ui";
+import { Plus, X } from "lucide-react";
 
 const EMPTY_SKILL = { name: "" };
 
@@ -90,109 +91,61 @@ export default function SkillsClient({
   return (
     <>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 36,
-        }}
-      >
+      <div className="flex items-center justify-between mb-9">
         <div>
           <p
-            style={{
-              color: accent,
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              marginBottom: 6,
-            }}
+            className="text-[11px] font-bold uppercase tracking-[0.18em] mb-1.5"
+            style={{ color: accent }}
           >
             // {String(skills.length).padStart(2, "0")} items
           </p>
-          <h1
-            style={{
-              color: "#fff",
-              fontSize: 30,
-              fontWeight: 800,
-              margin: 0,
-              lineHeight: 1,
-            }}
-          >
+
+          <h1 className="text-[30px] font-extrabold text-white leading-none">
             Skills
           </h1>
         </div>
+
         <button
           onClick={() => (showForm ? resetForm() : setShowForm(true))}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "12px 22px",
-            borderRadius: 12,
-            border: "none",
-            cursor: "pointer",
-            fontWeight: 700,
-            fontSize: 14,
-            background: showForm
-              ? "rgba(255,255,255,0.07)"
-              : `linear-gradient(135deg,${accent},${accent}99)`,
-            color: showForm ? "#888" : "#fff",
-            boxShadow: showForm ? "none" : `0 0 24px ${glow}`,
-            transition: "all 0.2s",
-          }}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200
+        ${showForm ? "bg-white/10 text-gray-400" : "text-white"}
+      `}
+          style={
+            showForm
+              ? {}
+              : {
+                  background: `linear-gradient(135deg,${accent},${accent}99)`,
+                  boxShadow: `0 0 24px ${glow}`,
+                }
+          }
         >
-          <span className="msym" style={{ fontSize: 20 }}>
-            {showForm ? "close" : "add"}
-          </span>
+          {showForm ? <X size={20} /> : <Plus size={20} />}
           {showForm ? "Cancel" : "Add Skill"}
         </button>
       </div>
 
       {/* Form */}
       {showForm && (
-        <div
-          className="adm-glass"
-          style={{
-            borderRadius: 20,
-            overflow: "hidden",
-            marginBottom: 40,
-            position: "relative",
-          }}
-        >
+        <div className="adm-glass rounded-2xl overflow-hidden mb-10 relative">
           <div
-            style={{
-              height: 3,
-              background: `linear-gradient(90deg,${accent},${glow})`,
-            }}
+            className="h-[3px]"
+            style={{ background: `linear-gradient(90deg,${accent},${glow})` }}
           />
-          <div style={{ padding: "28px 32px" }}>
-            <h2
-              style={{
-                color: "#fff",
-                fontWeight: 700,
-                marginBottom: 24,
-                fontSize: 18,
-              }}
-            >
+
+          <div className="px-8 py-7">
+            <h2 className="text-lg font-bold text-white mb-6">
               {editingId ? "Edit Skill" : "New Skill"}
             </h2>
+
             <form onSubmit={handleSubmit}>
               <div>
                 <label
-                  style={{
-                    color: accent,
-                    display: "block",
-                    fontSize: 10,
-                    fontWeight: 800,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.18em",
-                    marginBottom: 6,
-                  }}
+                  className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                  style={{ color: accent }}
                 >
                   Skill Name *
                 </label>
+
                 <input
                   className="adm-input adm-input-purple"
                   value={skillData.name}
@@ -201,21 +154,13 @@ export default function SkillsClient({
                   required
                 />
               </div>
-              <div style={{ marginTop: 24 }}>
+
+              <div className="mt-6">
                 <button
                   type="submit"
                   disabled={createMut.isPending || updateMut.isPending}
-                  style={{
-                    padding: "12px 24px",
-                    borderRadius: 10,
-                    border: "none",
-                    background: accent,
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    cursor: "pointer",
-                    width: "100%",
-                  }}
+                  className="w-full py-3 rounded-lg font-bold text-sm text-white transition disabled:opacity-50"
+                  style={{ background: accent }}
                 >
                   Save Skill
                 </button>
@@ -233,35 +178,17 @@ export default function SkillsClient({
           onClick={() => setShowForm(true)}
         />
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))",
-            gap: 16,
-          }}
-        >
+        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
           {skills.map((skill: any) => (
             <div
               key={skill.id}
-              className="adm-card"
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "16px 20px",
-                borderLeft: `3px solid ${accent}`,
-              }}
+              className="adm-card flex justify-between items-center px-5 py-4 border-l-[3px]"
+              style={{ borderLeft: `3px solid ${accent}` }}
             >
-              <h3
-                style={{
-                  margin: 0,
-                  color: "#fff",
-                  fontSize: 15,
-                  fontWeight: 600,
-                }}
-              >
+              <h3 className="text-[15px] font-semibold text-white">
                 {skill.name}
               </h3>
+
               <ActionButtons
                 onEdit={() => startEdit(skill)}
                 onDelete={() => handleDelete(skill.id)}

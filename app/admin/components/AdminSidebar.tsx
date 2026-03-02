@@ -1,5 +1,13 @@
 "use client";
 
+import {
+  Folder,
+  BriefcaseBusiness,
+  GraduationCap,
+  Code,
+  CircleChevronLeft,
+  ArrowLeft,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -7,7 +15,7 @@ export const NAV = [
   {
     id: "projects",
     label: "Projects",
-    icon: "folder",
+    icon: Folder,
     href: "/admin/projects",
     accent: "#00f2ff",
     glow: "rgba(0,242,255,0.35)",
@@ -16,7 +24,7 @@ export const NAV = [
   {
     id: "experience",
     label: "Experience",
-    icon: "work",
+    icon: BriefcaseBusiness,
     href: "/admin/experience",
     accent: "#5050f7",
     glow: "rgba(80,80,247,0.35)",
@@ -25,7 +33,7 @@ export const NAV = [
   {
     id: "education",
     label: "Education",
-    icon: "school",
+    icon: GraduationCap,
     href: "/admin/education",
     accent: "#ffb703",
     glow: "rgba(255,183,3,0.35)",
@@ -34,7 +42,7 @@ export const NAV = [
   {
     id: "skills",
     label: "Skills",
-    icon: "code",
+    icon: Code,
     href: "/admin/skills",
     accent: "#bc13fe",
     glow: "rgba(188,19,254,0.35)",
@@ -46,98 +54,47 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside
-      style={{
-        width: 240,
-        flexShrink: 0,
-        position: "sticky",
-        top: 80,
-        height: "calc(100vh - 80px)",
-        display: "flex",
-        flexDirection: "column",
-        padding: "28px 16px",
-        borderRight: "1px solid rgba(255,255,255,0.07)",
-        background: "rgba(255,255,255,0.04)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
-        borderRadius: 0,
-      }}
-    >
+    <aside className="w-[240px] flex flex-col px-4 py-7 border-r border-white/10 bg-white/5 backdrop-blur-[14px]">
       {/* Logo */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 36,
-          paddingLeft: 8,
-        }}
-      >
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 12,
-            background: "linear-gradient(135deg,#5050f7,#bc13fe)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            fontWeight: 800,
-            fontSize: 14,
-          }}
-        >
-          DP
+      <div className="flex items-center gap-3 mb-9 pl-2">
+        <div className="w-10 h-10 rounded-xl bg-[linear-gradient(135deg,#5050f7,#bc13fe)] flex items-center justify-center text-white font-extrabold text-sm">
+          GH
         </div>
+
         <div>
-          <p
-            style={{
-              color: "#fff",
-              fontWeight: 700,
-              fontSize: 15,
-              lineHeight: 1,
-            }}
-          >
+          <p className="text-white font-bold text-[15px] leading-none">
             Portfolio Admin
           </p>
-          <p style={{ color: "#555", fontSize: 11, marginTop: 3 }}>
-            Content Manager
-          </p>
+          <p className="text-[#555] text-[11px] mt-[3px]">Content Manager</p>
         </div>
       </div>
 
       {/* Nav */}
-      <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <nav className="flex flex-col gap-1.5">
         {NAV.map((n) => {
           const active = pathname.startsWith(n.href);
+
           return (
             <Link
               key={n.id}
               href={n.href}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: "11px 14px",
-                borderRadius: 12,
-                cursor: "pointer",
-                background: active ? n.activeBg : "transparent",
-                color: active ? n.accent : "#666",
-                fontWeight: active ? 700 : 500,
-                fontSize: 14,
-                boxShadow: active ? `0 0 16px ${n.glow}` : "none",
-                borderLeft: active
-                  ? `3px solid ${n.accent}`
-                  : "3px solid transparent",
-                transition: "all 0.2s",
-                width: "100%",
-                textAlign: "left",
-                textDecoration: "none",
-              }}
+              className={`flex items-center gap-3 px-[14px] py-[11px] rounded-xl w-full text-left text-[14px] transition-all duration-200 border-l-[3px] ${
+                active
+                  ? `font-bold`
+                  : `font-medium text-[#666] border-l-transparent`
+              }`}
+              style={
+                active
+                  ? {
+                      background: n.activeBg,
+                      color: n.accent,
+                      boxShadow: `0 0 16px ${n.glow}`,
+                      borderLeft: `3px solid ${n.accent}`,
+                    }
+                  : undefined
+              }
             >
-              <span className="msym" style={{ fontSize: 20 }}>
-                {n.icon}
-              </span>
+              <n.icon size={20} />
               {n.label}
             </Link>
           );
@@ -145,32 +102,12 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Back to site */}
-      <div
-        style={{
-          marginTop: "auto",
-          paddingTop: 24,
-          borderTop: "1px solid rgba(255,255,255,0.07)",
-        }}
-      >
+      <div className="mt-auto pt-6 border-t border-white/10">
         <a
           href="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "10px 14px",
-            borderRadius: 12,
-            color: "#555",
-            textDecoration: "none",
-            fontSize: 13,
-            transition: "color 0.2s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#555")}
+          className="flex items-center justify-center gap-2.5 px-[14px] py-[10px] rounded-xl text-[13px] text-[#555] transition-colors duration-200 hover:text-white"
         >
-          <span className="msym" style={{ fontSize: 18 }}>
-            arrow_back
-          </span>
+          <ArrowLeft size={18} />
           Back to portfolio
         </a>
       </div>

@@ -34,15 +34,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="
-    relative z-[1]
-    py-[100px] px-8
-    max-md:py-[60px]
-    bg-gradient-to-b
-    from-transparent
-    via-primary/5
-    to-black/30
-  "
+      className="relative z-1 py-[100px] px-8 max-md:py-[60px] bg-linear-to-b from-transparent via-primary/5 to-black/30"
     >
       <div className="max-w-[1100px] mx-auto">
         {/* Header */}

@@ -40,6 +40,12 @@
     @apply font-sans overflow-x-hidden bg-background text-foreground cursor-none max-md:cursor-auto;
   }
 
+  html,
+  body,
+  * {
+    cursor: none !important;
+  }
+
   section {
     @apply py-[100px] max-md:py-[60px];
   }
@@ -211,6 +217,65 @@
 
   .form-input::placeholder {
     @apply text-subtle;
+  }
+
+  /* Admin dashboard */
+
+  /* Glass container */
+  .adm-glass {
+    @apply border rounded-2xl;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Cards */
+  .adm-card {
+    @apply p-6 rounded-2xl border relative overflow-hidden transition-all;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .adm-card:hover {
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Inputs */
+  .adm-input {
+    @apply w-full px-4 py-3 text-sm text-white rounded-xl outline-none transition-all border;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    font-family: inherit;
+  }
+
+  .adm-input:focus {
+    border-color: #00f2ff;
+    box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.1);
+  }
+
+  .adm-input-purple:focus {
+    border-color: #bc13fe;
+    box-shadow: 0 0 0 2px rgba(188, 19, 254, 0.1);
+  }
+
+  .adm-input-indigo:focus {
+    border-color: #5050f7;
+    box-shadow: 0 0 0 2px rgba(80, 80, 247, 0.1);
+  }
+
+  /* Icon button */
+  .adm-btn-icon {
+    @apply w-9 h-9 flex items-center justify-center rounded-lg text-lg border border-transparent transition-all cursor-pointer;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Select arrow */
+  select.adm-input {
+    @apply appearance-none bg-no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-position: right 14px center;
   }
 }
 

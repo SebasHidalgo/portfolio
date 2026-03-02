@@ -10,6 +10,7 @@ import {
   deleteEducation,
 } from "@/lib/database/tables/education";
 import { ActionButtons, EmptyState } from "@/app/admin/components/ui";
+import { Plus, X } from "lucide-react";
 
 const EMPTY_EDU = {
   degree: "",
@@ -28,6 +29,8 @@ export default function EducationClient({
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [eduData, setEduData] = useState({ ...EMPTY_EDU });
+
+  const accent = "#ffb703";
 
   const { data: educations = initialEducations } = useQuery({
     queryKey: ["education"],
@@ -124,7 +127,7 @@ export default function EducationClient({
                 : "bg-yellow-400 text-black shadow-[0_0_24px_rgba(255,183,3,0.35)] hover:opacity-90"
             }`}
         >
-          <span className="text-lg">{showForm ? "✕" : "+"}</span>
+          {showForm ? <X size={20} /> : <Plus size={20} />}
           {showForm ? "Cancel" : "Add Education"}
         </button>
       </div>
@@ -223,7 +226,7 @@ export default function EducationClient({
             <div
               key={edu.id}
               className="adm-card"
-              style={{ borderLeft: `4px solid ${edu.color || "#ffb703"}` }}
+              style={{ borderLeft: `3px solid ${accent}` }}
             >
               <div className="flex justify-between mb-2">
                 <h3 className="text-lg font-bold text-white">{edu.degree}</h3>

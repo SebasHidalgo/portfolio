@@ -10,6 +10,7 @@ import {
   deleteProject,
 } from "@/lib/database/tables/project";
 import { ActionButtons, EmptyState } from "@/app/admin/components/ui";
+import { Plus, X } from "lucide-react";
 
 const EMPTY_PROJECT = {
   title: "",
@@ -111,113 +112,59 @@ export default function ProjectsClient({
   return (
     <>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 36,
-        }}
-      >
+      <div className="flex items-center justify-between mb-9">
         <div>
           <p
-            style={{
-              color: accent,
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              marginBottom: 6,
-            }}
+            className="text-[11px] font-bold uppercase tracking-[0.18em] mb-1.5"
+            style={{ color: accent }}
           >
             // {String(projects.length).padStart(2, "0")} items
           </p>
-          <h1
-            style={{
-              color: "#fff",
-              fontSize: 30,
-              fontWeight: 800,
-              margin: 0,
-              lineHeight: 1,
-            }}
-          >
+
+          <h1 className="text-[30px] font-extrabold text-white leading-none">
             Projects
           </h1>
         </div>
+
         <button
           onClick={() => (showForm ? resetForm() : setShowForm(true))}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "12px 22px",
-            borderRadius: 12,
-            border: "none",
-            cursor: "pointer",
-            fontWeight: 700,
-            fontSize: 14,
-            background: showForm
-              ? "rgba(255,255,255,0.07)"
-              : `linear-gradient(135deg,${accent},${accent}99)`,
-            color: showForm ? "#888" : "#0a0a0f",
-            boxShadow: showForm ? "none" : `0 0 24px ${glow}`,
-            transition: "all 0.2s",
-          }}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200
+        ${showForm ? "bg-white/10 text-gray-400" : "text-background"}
+      `}
+          style={
+            showForm
+              ? {}
+              : {
+                  background: `linear-gradient(135deg,${accent},${accent}99)`,
+                  boxShadow: `0 0 24px ${glow}`,
+                }
+          }
         >
-          <span className="msym" style={{ fontSize: 20 }}>
-            {showForm ? "close" : "add"}
-          </span>
+          {showForm ? <X size={20} /> : <Plus size={20} />}
           {showForm ? "Cancel" : "Add Project"}
         </button>
       </div>
 
       {/* Form */}
       {showForm && (
-        <div
-          className="adm-glass"
-          style={{
-            borderRadius: 20,
-            overflow: "hidden",
-            marginBottom: 40,
-            position: "relative",
-          }}
-        >
+        <div className="adm-glass rounded-2xl overflow-hidden mb-10 relative">
           <div
-            style={{
-              height: 3,
-              background: `linear-gradient(90deg,${accent},${glow})`,
-            }}
+            className="h-[3px]"
+            style={{ background: `linear-gradient(90deg,${accent},${glow})` }}
           />
-          <div style={{ padding: "28px 32px" }}>
-            <h2
-              style={{
-                color: "#fff",
-                fontWeight: 700,
-                marginBottom: 24,
-                fontSize: 18,
-              }}
-            >
+
+          <div className="px-8 py-7">
+            <h2 className="text-lg font-bold text-white mb-6">
               {editingId ? "Edit Project" : "New Project"}
             </h2>
+
             <form onSubmit={handleSubmit}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 18,
-                }}
-              >
-                <div style={{ gridColumn: "1/-1" }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Title */}
+                <div className="md:col-span-2">
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Project Title *
                   </label>
@@ -231,22 +178,17 @@ export default function ProjectsClient({
                     required
                   />
                 </div>
-                <div style={{ gridColumn: "1/-1" }}>
+
+                {/* Description */}
+                <div className="md:col-span-2">
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Description *
                   </label>
                   <textarea
-                    className="adm-input"
+                    className="adm-input resize-y"
                     rows={3}
                     value={projectData.description}
                     onChange={(e) =>
@@ -256,20 +198,14 @@ export default function ProjectsClient({
                       })
                     }
                     required
-                    style={{ resize: "vertical" }}
                   />
                 </div>
-                <div style={{ gridColumn: "1/-1" }}>
+
+                {/* Image */}
+                <div className="md:col-span-2">
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Image URL *
                   </label>
@@ -283,17 +219,12 @@ export default function ProjectsClient({
                     required
                   />
                 </div>
-                <div style={{ gridColumn: "1/-1" }}>
+
+                {/* Tech Stack */}
+                <div className="md:col-span-2">
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Tech Stack (comma-separated) *
                   </label>
@@ -310,17 +241,12 @@ export default function ProjectsClient({
                     required
                   />
                 </div>
+
+                {/* GitHub */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     GitHub URL
                   </label>
@@ -336,17 +262,12 @@ export default function ProjectsClient({
                     placeholder="https://github.com/..."
                   />
                 </div>
+
+                {/* Demo */}
                 <div>
                   <label
-                    style={{
-                      color: accent,
-                      display: "block",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.18em",
-                      marginBottom: 6,
-                    }}
+                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
+                    style={{ color: accent }}
                   >
                     Live Demo URL
                   </label>
@@ -363,20 +284,15 @@ export default function ProjectsClient({
                   />
                 </div>
               </div>
-              <div style={{ marginTop: 24 }}>
+
+              <div className="mt-6">
                 <button
                   type="submit"
                   disabled={createMut.isPending || updateMut.isPending}
+                  className="w-full py-3 rounded-lg font-bold text-sm transition disabled:opacity-50"
                   style={{
-                    padding: "12px 24px",
-                    borderRadius: 10,
-                    border: "none",
                     background: accent,
                     color: "#0a0a0f",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    cursor: "pointer",
-                    width: "100%",
                   }}
                 >
                   Save Project
@@ -395,76 +311,43 @@ export default function ProjectsClient({
           onClick={() => setShowForm(true)}
         />
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))",
-            gap: 24,
-          }}
-        >
+        <div className="grid gap-6 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
           {projects.map((p: any) => (
-            <div key={p.id} className="adm-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: 12,
-                }}
-              >
-                <h3
-                  style={{
-                    margin: 0,
-                    color: "#fff",
-                    fontSize: 18,
-                    fontWeight: 700,
-                  }}
-                >
-                  {p.title}
-                </h3>
+            <div
+              key={p.id}
+              className="adm-card flex flex-col"
+              style={{ borderLeft: `3px solid ${accent}` }}
+            >
+              <div className="flex justify-between mb-3">
+                <h3 className="text-lg font-bold text-white">{p.title}</h3>
+
                 <ActionButtons
                   onEdit={() => startEdit(p)}
                   onDelete={() => handleDelete(p.id)}
                   editColor={accent}
                 />
               </div>
-              <p
-                style={{
-                  color: "#888",
-                  fontSize: 13,
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  marginBottom: 16,
-                }}
-              >
+
+              <p className="text-sm text-gray-400 line-clamp-2 mb-4">
                 {p.description}
               </p>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                  marginTop: "auto",
-                }}
-              >
+
+              <div className="flex flex-wrap gap-2 mt-auto">
                 {p.techStack.slice(0, 3).map((t: string, i: number) => (
                   <span
                     key={i}
+                    className="px-3 py-1 rounded-lg text-[11px] font-semibold"
                     style={{
                       background: "rgba(0,242,255,0.1)",
                       color: accent,
-                      padding: "4px 10px",
-                      borderRadius: 8,
-                      fontSize: 11,
-                      fontWeight: 600,
                     }}
                   >
                     {t}
                   </span>
                 ))}
+
                 {p.techStack.length > 3 && (
-                  <span style={{ color: "#666", fontSize: 11, paddingTop: 4 }}>
+                  <span className="text-xs text-gray-500 pt-1">
                     +{p.techStack.length - 3}
                   </span>
                 )}
