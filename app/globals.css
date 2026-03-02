@@ -40,6 +40,12 @@
     @apply font-sans overflow-x-hidden bg-background text-foreground cursor-none max-md:cursor-auto;
   }
 
+  html,
+  body,
+  * {
+    cursor: none !important;
+  }
+
   section {
     @apply py-[100px] max-md:py-[60px];
   }

@@ -16,6 +16,7 @@ export default function AdminLayout({
     <Providers>
       <CustomCursor />
       <ParticleCanvasWrapper />
+
       {/* Google Material Icons */}
       <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap"
@@ -66,17 +67,10 @@ export default function AdminLayout({
         }
         select.adm-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
       `}</style>
-      <div
-        style={{
-          minHeight: "100vh",
-          paddingTop: "80px",
-          background: "#0a0a0f",
-          display: "flex",
-        }}
-      >
+      <div className="min-h-screen bg-background flex">
         <AdminSidebar />
-        <main style={{ flex: 1, overflowY: "auto", padding: "40px 48px" }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto" }}>{children}</div>
+        <main className="flex-1 overflow-y-auto p-12">
+          <div className="max-w-[1100px] mx-auto">{children}</div>
         </main>
       </div>
     </Providers>

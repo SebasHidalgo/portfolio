@@ -40,16 +40,11 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`
-        fixed top-0 left-0 right-0 z-1000 
-        transition-all duration-300 
-        px-8
-        ${
-          scrolled
-            ? "bg-[rgba(10,10,15,0.85)] backdrop-blur-[20px] border-b border-white/10"
-            : "bg-transparent"
-        }
-      `}
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 px-8 ${
+        scrolled
+          ? "bg-[rgba(10,10,15,0.85)] backdrop-blur-[20px] border-b border-white/10"
+          : "bg-transparent"
+      }`}
     >
       <div className="max-w-[1200px] mx-auto flex items-center justify-between h-[72px]">
         {/* Logo */}
