@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 
 export const NAV = [
   {
@@ -51,6 +52,7 @@ export const NAV = [
 ];
 
 export default function AdminSidebar() {
+  const { signOut } = useClerk();
   const pathname = usePathname();
 
   return (
@@ -101,8 +103,8 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      {/* Back to site */}
-      <div className="mt-auto pt-6 border-t border-white/10">
+      {/* Bottom actions */}
+      <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-2">
         <a
           href="/"
           className="flex items-center justify-center gap-2.5 px-[14px] py-[10px] rounded-xl text-[13px] text-[#555] transition-colors duration-200 hover:text-white"
@@ -110,6 +112,14 @@ export default function AdminSidebar() {
           <ArrowLeft size={18} />
           Back to portfolio
         </a>
+
+        <button
+          onClick={() => signOut({ redirectUrl: "/" })}
+          className="flex items-center justify-center gap-2.5 px-[14px] py-[10px] rounded-xl text-[13px] text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200"
+        >
+          <CircleChevronLeft size={18} />
+          Sign Out
+        </button>
       </div>
     </aside>
   );

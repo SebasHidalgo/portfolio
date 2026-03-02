@@ -9,6 +9,7 @@ import ExperienceSection from "./components/ExperienceSection";
 import ContactSection from "./components/ContactSection";
 import CustomCursor from "./components/CustomCursor"; // Changed from dynamic import
 import prisma from "@/lib/database/prisma";
+import AdminFloatingButton from "./components/AdminFloatingButton";
 
 // Load heavy canvas component only on client
 const ParticleCanvas = dynamic(() => import("./components/ParticleCanvas"), {
@@ -58,6 +59,8 @@ export default async function Home() {
         <ExperienceSection />
         <ContactSection />
       </main>
+
+      <AdminFloatingButton />
     </>
   );
 }
