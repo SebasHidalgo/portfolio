@@ -2,13 +2,58 @@
 
 import { useState } from "react";
 import GithubSVG from "./svg/GithubSVG";
+import type { Project } from "@/types";
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Infer a display category from the project's tech stack + description.
+ * This is needed because the Project table has no "category" column.
+ */
+function inferCategory(p: Project): "frontend" | "backend" | "fullstack" {
+  const text = [...p.techStack, p.description, p.title].join(" ").toLowerCase();
+
+  const isFront =
+    /react|vue|angular|svelte|next|nuxt|css|tailwind|html|ui|ux|design|figma|sass|vite/.test(
+      text,
+    );
+  const isBack =
+    /node|express|django|laravel|spring|fastapi|api|rest|graphql|database|sql|prisma|redis|docker|kubernetes|server|backend|aws|gcp/.test(
+      text,
+    );
+
+  if (isFront && isBack) return "fullstack";
+  if (isBack) return "backend";
+  if (isFront) return "frontend";
+  return "fullstack";
+}
+
+function categoryEmoji(cat: string): string {
+  if (cat === "frontend") return "🎨";
+  if (cat === "backend") return "⚙️";
+  return "🚀";
+}
+
+const GRADIENTS = [
+  "linear-gradient(135deg, #4f8ef7 0%, #a855f7 100%)",
+  "linear-gradient(135deg, #22d3ee 0%, #4f8ef7 100%)",
+  "linear-gradient(135deg, #a855f7 0%, #ec4899 100%)",
+  "linear-gradient(135deg, #4ade80 0%, #22d3ee 100%)",
+  "linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)",
+];
+
+// ---------------------------------------------------------------------------
+// Static fallback data
+// ---------------------------------------------------------------------------
 
 const defaultProjects = [
   {
     title: "Nova Commerce",
     desc: "Plataforma e-commerce headless con seguimiento de inventario en tiempo real, recomendaciones IA y integración Stripe.",
     tech: ["Next.js", "Node.js", "PostgreSQL", "Stripe", "Redis"],
-    gradient: "linear-gradient(135deg, #4f8ef7 0%, #a855f7 100%)",
+    gradient: GRADIENTS[0],
     emoji: "🛒",
     category: "fullstack",
     github: "https://github.com",
@@ -18,7 +63,7 @@ const defaultProjects = [
     title: "CryptoBoard",
     desc: "Dashboard de seguimiento de criptomonedas con gráficos interactivos, WebSocket en tiempo real e integración de billetera.",
     tech: ["React", "WebSocket", "Chart.js", "TypeScript"],
-    gradient: "linear-gradient(135deg, #22d3ee 0%, #4f8ef7 100%)",
+    gradient: GRADIENTS[1],
     emoji: "📊",
     category: "frontend",
     github: "https://github.com",
@@ -28,7 +73,7 @@ const defaultProjects = [
     title: "SynthAPI",
     desc: "API RESTful robusta para procesamiento de imágenes con IA generativa, rate limiting, caché y autenticación segura.",
     tech: ["Node.js", "Express", "JWT", "Redis", "Docker"],
-    gradient: "linear-gradient(135deg, #a855f7 0%, #ec4899 100%)",
+    gradient: GRADIENTS[2],
     emoji: "⚡",
     category: "backend",
     github: "https://github.com",
@@ -43,33 +88,36 @@ const filters = [
   { label: "Full Stack", value: "fullstack" },
 ];
 
-export default function ProjectsSection({
-  projects = [],
-}: {
-  projects?: any[];
-}) {
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+interface ProjectsSectionProps {
+  projects: Project[];
+}
+
+export default function ProjectsSection({ projects }: ProjectsSectionProps) {
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const displayProjects =
-    projects.length > 0
-      ? projects.map((p, i) => ({
+  const hasDbProjects = projects.length > 0;
+
+  // Enrich DB projects with UI-only fields (category inferred, gradient, emoji)
+  const displayProjects = hasDbProjects
+    ? projects.map((p, i) => {
+        const category = inferCategory(p);
+        return {
+          id: p.id,
           title: p.title,
           desc: p.description,
-          category: p.category.toLowerCase().replace(" ", ""),
           tech: p.techStack,
-          demo: p.demoUrl || "#",
-          github: p.githubUrl || "#",
-          gradient:
-            i % 2 === 0
-              ? "linear-gradient(135deg, #4f8ef7 0%, #a855f7 100%)"
-              : "linear-gradient(135deg, #22d3ee 0%, #4f8ef7 100%)",
-          emoji: p.category.toLowerCase().includes("front")
-            ? "🎨"
-            : p.category.toLowerCase().includes("back")
-              ? "⚙️"
-              : "🚀",
-        }))
-      : defaultProjects;
+          demo: p.demoUrl ?? null,
+          github: p.githubUrl ?? null,
+          category,
+          gradient: GRADIENTS[i % GRADIENTS.length],
+          emoji: categoryEmoji(category),
+        };
+      })
+    : defaultProjects;
 
   const filtered =
     activeFilter === "all"
@@ -211,7 +259,7 @@ export default function ProjectsSection({
                 {/* Action buttons */}
                 <div className="flex gap-3">
                   <a
-                    href={project.demo}
+                    href={project.demo ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-primary no-underline text-[0.85rem] px-[18px] py-[9px] flex-1 text-center"
@@ -220,7 +268,7 @@ export default function ProjectsSection({
                   </a>
 
                   <a
-                    href={project.github}
+                    href={project.github ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-secondary flex items-center gap-2 text-xs"
@@ -233,6 +281,13 @@ export default function ProjectsSection({
             </div>
           ))}
         </div>
+
+        {/* Empty state when a filter yields no results */}
+        {filtered.length === 0 && (
+          <p className="text-center text-muted text-[0.9rem] mt-8">
+            No hay proyectos en esta categoría todavía.
+          </p>
+        )}
       </div>
     </section>
   );

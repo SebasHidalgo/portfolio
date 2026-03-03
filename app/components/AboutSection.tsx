@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { Skill } from "@/types";
 
 const traits = [
   { icon: "🧩", title: "Problem Solver", desc: "Lógico & Creativo" },
@@ -9,25 +10,13 @@ const traits = [
   { icon: "🤝", title: "Team Player", desc: "Colaboración primero" },
 ];
 
-const staticSkills = [
-  { name: "React / Next.js", level: 92, color: "#4f8ef7" },
-  { name: "TypeScript", level: 88, color: "#a855f7" },
-  { name: "Node.js / Express", level: 85, color: "#22d3ee" },
-  { name: "PostgreSQL / Prisma", level: 80, color: "#4f8ef7" },
-  { name: "Docker / AWS", level: 75, color: "#a855f7" },
-  { name: "GraphQL", level: 70, color: "#22d3ee" },
-];
+const CHIP_COLORS = ["#4f8ef7", "#a855f7", "#22d3ee"];
 
-export default function AboutSection({ skills = [] }: { skills?: any[] }) {
-  const displaySkills =
-    skills.length > 0
-      ? skills.map((s, i) => ({
-          name: s.name,
-          level: s.level,
-          category: s.category,
-          color: i % 3 === 0 ? "#4f8ef7" : i % 3 === 1 ? "#a855f7" : "#22d3ee",
-        }))
-      : staticSkills;
+interface AboutSectionProps {
+  skills: Skill[];
+}
+
+export default function AboutSection({ skills }: AboutSectionProps) {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -38,7 +27,6 @@ export default function AboutSection({ skills = [] }: { skills?: any[] }) {
       },
       { threshold: 0.1 },
     );
-
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
@@ -55,11 +43,9 @@ export default function AboutSection({ skills = [] }: { skills?: any[] }) {
           <p className="text-primary font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
             // 01. SOBRE MÍ
           </p>
-
           <h2 className="section-title gradient-text-blue-purple">
             Conóceme Mejor
           </h2>
-
           <p className="section-subtitle">
             Desarrollador apasionado por crear experiencias digitales
             extraordinarias
@@ -88,7 +74,6 @@ export default function AboutSection({ skills = [] }: { skills?: any[] }) {
               <div className="glass absolute -top-[10px] -right-[20px] px-[14px] py-[8px] rounded-full text-[0.8rem] font-semibold text-primary whitespace-nowrap animate-float">
                 ⚡ React Expert
               </div>
-
               <div className="glass absolute bottom-0 -left-[30px] px-[14px] py-[8px] rounded-full text-[0.8rem] font-semibold text-secondary whitespace-nowrap animate-float [animation-delay:1s]">
                 🔗 Open Source
               </div>
@@ -108,11 +93,9 @@ export default function AboutSection({ skills = [] }: { skills?: any[] }) {
               "
                 >
                   <div className="text-[1.5rem] mb-1">{t.icon}</div>
-
                   <div className="text-[0.85rem] font-semibold text-foreground mb-[2px]">
                     {t.title}
                   </div>
-
                   <div className="text-[0.75rem] text-subtle">{t.desc}</div>
                 </div>
               ))}
@@ -150,38 +133,35 @@ export default function AboutSection({ skills = [] }: { skills?: any[] }) {
               Habilidades técnicas
             </h4>
 
-            <div className="flex flex-col gap-4">
-              {displaySkills.map((skill, i) => (
-                <div key={i}>
-                  <div className="flex justify-between mb-[6px]">
-                    <span className="text-[0.85rem] text-muted font-mono">
-                      {skill.name}
-                    </span>
-
-                    <span
-                      className="text-[0.8rem] font-semibold font-mono"
-                      style={{ color: skill.color }}
-                    >
-                      {skill.level}%
-                    </span>
-                  </div>
-
-                  <div className="skill-bar">
-                    <div
-                      className="skill-fill transition-all duration-700"
-                      style={{
-                        width: visible ? `${skill.level}%` : "0%",
-                        background: `linear-gradient(90deg, ${skill.color}, ${
-                          i % 2 === 0
-                            ? "var(--color-secondary)"
-                            : "var(--color-accent)"
-                        })`,
-                        transitionDelay: `${i * 0.1 + 0.3}s`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-wrap gap-3">
+              {skills.map((skill, i) => {
+                const color = CHIP_COLORS[i % CHIP_COLORS.length];
+                return (
+                  <span
+                    key={skill.id}
+                    className="px-4 py-2 rounded-full text-[0.8rem] font-mono font-medium border transition-all duration-300 hover:-translate-y-0.5 cursor-default"
+                    style={{
+                      background: `${color}12`,
+                      borderColor: `${color}30`,
+                      color,
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLSpanElement).style.boxShadow =
+                        `0 0 14px ${color}33`;
+                      (e.currentTarget as HTMLSpanElement).style.borderColor =
+                        `${color}60`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLSpanElement).style.boxShadow =
+                        "none";
+                      (e.currentTarget as HTMLSpanElement).style.borderColor =
+                        `${color}30`;
+                    }}
+                  >
+                    {skill.name}
+                  </span>
+                );
+              })}
             </div>
 
             {/* Download CV */}

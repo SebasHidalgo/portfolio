@@ -11,6 +11,16 @@ import {
 } from "@/lib/database/tables/project";
 import { ActionButtons, EmptyState } from "@/app/admin/components/ui";
 import { Plus, X } from "lucide-react";
+import { Project } from "@/types";
+
+type ProjectPayload = {
+  title: string;
+  description: string;
+  image: string;
+  techStack: string[];
+  demoUrl?: string;
+  githubUrl?: string;
+};
 
 const EMPTY_PROJECT = {
   title: "",
@@ -27,7 +37,7 @@ const glow = "rgba(0,242,255,0.35)";
 export default function ProjectsClient({
   initialProjects,
 }: {
-  initialProjects: any[];
+  initialProjects: Project[];
 }) {
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
@@ -41,7 +51,7 @@ export default function ProjectsClient({
   });
 
   const createMut = useMutation({
-    mutationFn: (data: any) => createProject(data),
+    mutationFn: (data: ProjectPayload) => createProject(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Project created successfully!");
@@ -51,7 +61,7 @@ export default function ProjectsClient({
   });
 
   const updateMut = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: string; data: ProjectPayload }) =>
       updateProject(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
@@ -96,7 +106,7 @@ export default function ProjectsClient({
     if (confirm("Delete this project?")) deleteMut.mutate(id);
   };
 
-  const startEdit = (item: any) => {
+  const startEdit = (item: Project) => {
     setEditingId(item.id);
     setShowForm(true);
     setProjectData({
@@ -312,7 +322,7 @@ export default function ProjectsClient({
         />
       ) : (
         <div className="grid gap-6 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-          {projects.map((p: any) => (
+          {projects.map((p) => (
             <div
               key={p.id}
               className="adm-card flex flex-col"

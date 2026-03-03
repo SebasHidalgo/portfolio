@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Skill } from "@/types";
 
 const typingTexts = [
   "Full Stack Developer",
@@ -10,7 +11,7 @@ const typingTexts = [
   "Problem Solver",
 ];
 
-const techStack = [
+const fallbackTechStack = [
   "React",
   "Next.js",
   "TypeScript",
@@ -27,7 +28,15 @@ const techStack = [
   "MongoDB",
 ];
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  skills: Skill[];
+}
+
+export default function HeroSection({ skills }: HeroSectionProps) {
+  // Use DB skill names in the ticker; fall back to static list if DB is empty
+  const techStack =
+    skills.length > 0 ? skills.map((s) => s.name) : fallbackTechStack;
+
   const [displayed, setDisplayed] = useState("");
   const [typingIndex, setTypingIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -66,9 +75,7 @@ export default function HeroSection() {
     >
       {/* Background gradient orbs */}
       <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(79,142,247,0.12)_0%,transparent_70%)] blur-2xl pointer-events-none" />
-
       <div className="absolute top-[30%] right-[10%] w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.12)_0%,transparent_70%)] blur-2xl pointer-events-none" />
-
       <div className="absolute bottom-[20%] left-[30%] w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.08)_0%,transparent_70%)] blur-2xl pointer-events-none" />
 
       {/* Floating code card */}
@@ -78,17 +85,14 @@ export default function HeroSection() {
           <span className="text-accent">dev</span>{" "}
           <span className="text-muted">= {`{`}</span>
         </div>
-
         <div className="font-mono text-[0.75rem] text-muted pl-3">
           <span className="text-foreground">passion</span>:{" "}
           <span className="text-accent">true,</span>
         </div>
-
         <div className="font-mono text-[0.75rem] text-muted pl-3">
           <span className="text-foreground">coffee</span>:{" "}
           <span className="text-accent">∞</span>
         </div>
-
         <div className="font-mono text-[0.75rem] text-muted">{`}`}</div>
       </div>
 
@@ -134,7 +138,6 @@ export default function HeroSection() {
             </svg>
           </span>
         </a>
-
         <a href="#contact" className="btn-secondary">
           Contáctame
         </a>
@@ -154,7 +157,7 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Tech ticker */}
+      {/* Tech ticker – populated from DB skills */}
       <div className="absolute bottom-0 left-0 right-0 overflow-hidden py-4 border-t border-card bg-[linear-gradient(to_right,var(--bg-primary),transparent_5%,transparent_95%,var(--bg-primary))]">
         <div className="flex gap-12 animate-[ticker_35s_linear_infinite] whitespace-nowrap w-max">
           {[...techStack, ...techStack].map((tech, i) => (

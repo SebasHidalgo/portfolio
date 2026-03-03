@@ -5,18 +5,18 @@ import { revalidatePath } from 'next/cache'
 
 export async function getSkills() {
     return await prisma.skill.findMany({
-        orderBy: { createdAt: 'desc' }
+        orderBy: { category: 'desc' }
     })
 }
 
-export async function createSkill(data: { name: string }) {
+export async function createSkill(data: { name: string; category: string }) {
     const skill = await prisma.skill.create({ data })
     revalidatePath('/admin/skills')
     revalidatePath('/')
     return skill
 }
 
-export async function updateSkill(id: string, data: { name: string }) {
+export async function updateSkill(id: string, data: { name: string; category: string }) {
     const skill = await prisma.skill.update({ where: { id }, data })
     revalidatePath('/admin/skills')
     revalidatePath('/')

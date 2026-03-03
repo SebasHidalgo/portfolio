@@ -1,71 +1,46 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { Experience, Education } from "@/types";
 
-const defaultExperiences = [
-  {
-    title: "Senior Full Stack Developer",
-    company: "TechCorp Innovation",
-    period: "Ene 2023 – Presente",
-    location: "Remote",
-    color: "#4f8ef7",
-    achievements: [
-      "Lideré el desarrollo de arquitectura de microservicios enterprise-scale, mejorando el throughput del sistema en 40%.",
-      "Implementé estrategias de caché con Redis, reduciendo la latencia de las APIs en 65%.",
-      "Mentoricé a 4 desarrolladores junior, estableciendo estándares de código y mejores prácticas.",
-      "Diseñé e implementé un sistema CI/CD con GitHub Actions y Docker, reduciendo el tiempo de despliegue en 70%.",
-    ],
-    tech: ["React", "Node.js", "PostgreSQL", "Redis", "Docker", "AWS"],
-  },
-  {
-    title: "Mid-Level Software Engineer",
-    company: "Digital Solutions SA",
-    period: "Mar 2021 – Dic 2022",
-    location: "Ciudad de México",
-    color: "#a855f7",
-    achievements: [
-      "Desarrollé interfaces frontend de alta fidelidad para clientes Fortune 500 usando React y TypeScript.",
-      "Lideré la migración de sistemas jQuery legacy a Vue.js moderno, mejorando el rendimiento en 45%.",
-      "Construí APIs RESTful con Node.js, manejando +10K solicitudes diarias con 99.9% de uptime.",
-      "Colaboré en sprints Agile con equipos de 8+ personas usando Jira y metodología Scrum.",
-    ],
-    tech: ["Vue.js", "React", "Node.js", "MySQL", "TypeScript"],
-  },
-  {
-    title: "Junior Web Developer",
-    company: "StartupHub México",
-    period: "Jun 2019 – Feb 2021",
-    location: "Guadalajara",
-    color: "#22d3ee",
-    achievements: [
-      "Colaboré con el equipo de diseño para implementar layouts web responsivos a partir de mockups en Figma.",
-      "Optimicé consultas SQL que redujeron el tiempo de carga de páginas en 15%.",
-      "Desarrollé componentes React reutilizables que aceleraron el desarrollo de nuevas features en un 30%.",
-    ],
-    tech: ["HTML/CSS", "JavaScript", "React", "PHP", "MySQL"],
-  },
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const MONTHS = [
+  "Ene",
+  "Feb",
+  "Mar",
+  "Abr",
+  "May",
+  "Jun",
+  "Jul",
+  "Ago",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dic",
 ];
 
-const defaultEducation = [
-  {
-    degree: "Ingeniería en Sistemas Computacionales",
-    institution: "Instituto Tecnológico de México",
-    period: "2015 – 2019",
-    gpa: "9.2/10",
-  },
-  {
-    degree: "Certificación AWS Solutions Architect",
-    institution: "Amazon Web Services",
-    period: "2022",
-    gpa: "Aprobado con distinción",
-  },
-];
+function formatPeriod(startIso: Date, endIso: Date): string {
+  const s = startIso;
+  const e = endIso;
+  return `${MONTHS[s.getMonth()]} ${s.getFullYear()} – ${MONTHS[e.getMonth()]} ${e.getFullYear()}`;
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+interface ExperienceSectionProps {
+  experiences: Experience[];
+  educations: Education[];
+}
 
 export default function ExperienceSection({
-  experiences: dbExperiences = [],
-}: {
-  experiences?: any[];
-}) {
+  experiences,
+  educations,
+}: ExperienceSectionProps) {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -76,37 +51,31 @@ export default function ExperienceSection({
       },
       { threshold: 0.05 },
     );
-
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  const displayExperiences =
-    dbExperiences.length > 0
-      ? dbExperiences
-          .filter((e) => !e.isEducation)
-          .map((e) => ({
-            title: e.position,
-            company: e.company,
-            period: e.period,
-            location: "", // Add location to DB if needed later
-            color: e.color || "#4f8ef7",
-            achievements: e.achievements || [],
-            tech: e.techStack || [],
-          }))
-      : defaultExperiences;
+  // Map DB Experience rows → display shape
+  const displayExperiences = experiences.map((e, i) => ({
+    key: e.id,
+    title: e.position,
+    company: e.company,
+    period: formatPeriod(e.startDate, e.endDate),
+    location: e.ubication,
+    color:
+      e.color ||
+      (i % 3 === 0 ? "#4f8ef7" : i % 3 === 1 ? "#a855f7" : "#22d3ee"),
+    achievements: e.achievements,
+  }));
 
-  const displayEducation =
-    dbExperiences.length > 0
-      ? dbExperiences
-          .filter((e) => e.isEducation)
-          .map((e) => ({
-            degree: e.position,
-            institution: e.company,
-            period: e.period,
-            gpa: e.achievements?.[0] || "",
-          }))
-      : defaultEducation;
+  // Map DB Education rows → display shape
+  const displayEducation = educations.map((e) => ({
+    key: e.id,
+    degree: e.degree,
+    institution: e.institution,
+    period: formatPeriod(e.startDate, e.endDate),
+    gpa: e.ubication,
+  }));
 
   return (
     <section
@@ -141,7 +110,7 @@ export default function ExperienceSection({
 
           {displayExperiences.map((exp, i) => (
             <div
-              key={i}
+              key={exp.key}
               className={`timeline-item relative flex mb-12 transition-all duration-700 ${
                 i % 2 === 0 ? "justify-start" : "justify-end"
               } ${
@@ -234,23 +203,6 @@ export default function ExperienceSection({
                     </li>
                   ))}
                 </ul>
-
-                {/* Tech stack */}
-                <div className="flex flex-wrap gap-1.5">
-                  {exp.tech.map((t: string) => (
-                    <span
-                      key={t}
-                      className="px-2.5 py-[3px] rounded-full text-[0.7rem] font-mono border"
-                      style={{
-                        background: `${exp.color}12`,
-                        borderColor: `${exp.color}25`,
-                        color: exp.color,
-                      }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
           ))}
@@ -265,7 +217,7 @@ export default function ExperienceSection({
           <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
             {displayEducation.map((edu, i) => (
               <div
-                key={i}
+                key={edu.key}
                 className={`glass p-6 rounded-xl flex gap-4 items-start transition-all duration-700 ${
                   visible
                     ? "opacity-100 translate-y-0"

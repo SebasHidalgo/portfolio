@@ -5,11 +5,11 @@ import { revalidatePath } from 'next/cache'
 
 export async function getExperiences() {
     return await prisma.experience.findMany({
-        orderBy: { createdAt: 'desc' }
+        orderBy: { startDate: 'desc' }
     })
 }
 
-export async function createExperience(data: { company: string, position: string, ubication: string, color: string, achievements: string[], techStack: string[], startDate: Date, endDate: Date }) {
+export async function createExperience(data: { company: string, position: string, ubication: string, color: string, achievements: string[], startDate: Date, endDate: Date }) {
     const experience = await prisma.experience.create({ data })
     revalidatePath('/admin/experience')
     revalidatePath('/')

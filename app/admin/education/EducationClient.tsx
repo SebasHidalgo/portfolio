@@ -11,6 +11,15 @@ import {
 } from "@/lib/database/tables/education";
 import { ActionButtons, EmptyState } from "@/app/admin/components/ui";
 import { Plus, X } from "lucide-react";
+import { Education } from "@/types";
+
+type EducationPayload = {
+  degree: string;
+  institution: string;
+  ubication: string;
+  startDate: Date;
+  endDate: Date;
+};
 
 const EMPTY_EDU = {
   degree: "",
@@ -23,7 +32,7 @@ const EMPTY_EDU = {
 export default function EducationClient({
   initialEducations,
 }: {
-  initialEducations: any[];
+  initialEducations: Education[];
 }) {
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
@@ -39,7 +48,7 @@ export default function EducationClient({
   });
 
   const createMut = useMutation({
-    mutationFn: (data: any) => createEducation(data),
+    mutationFn: (data: EducationPayload) => createEducation(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["education"] });
       toast.success("Education created successfully!");
@@ -49,7 +58,7 @@ export default function EducationClient({
   });
 
   const updateMut = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: string; data: EducationPayload }) =>
       updateEducation(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["education"] });
@@ -95,7 +104,7 @@ export default function EducationClient({
     if (confirm("Delete this education entry?")) deleteMut.mutate(id);
   };
 
-  const startEdit = (item: any) => {
+  const startEdit = (item: Education) => {
     setEditingId(item.id);
     setShowForm(true);
     setEduData({
@@ -222,7 +231,7 @@ export default function EducationClient({
         />
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {educations.map((edu: any) => (
+          {educations.map((edu) => (
             <div
               key={edu.id}
               className="adm-card"

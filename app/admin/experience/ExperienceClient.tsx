@@ -11,6 +11,17 @@ import {
 } from "@/lib/database/tables/experience";
 import { ActionButtons, EmptyState } from "@/app/admin/components/ui";
 import { Plus, X } from "lucide-react";
+import { Experience } from "@/types";
+
+type ExperiencePayload = {
+  company: string;
+  position: string;
+  ubication: string;
+  color: string;
+  achievements: string[];
+  startDate: Date;
+  endDate: Date;
+};
 
 const EMPTY_EXP = {
   company: "",
@@ -18,7 +29,6 @@ const EMPTY_EXP = {
   ubication: "",
   color: "#5050f7",
   achievements: "",
-  techStack: "",
   startDate: "",
   endDate: "",
 };
@@ -29,7 +39,7 @@ const glow = "rgba(80,80,247,0.35)";
 export default function ExperienceClient({
   initialExperiences,
 }: {
-  initialExperiences: any[];
+  initialExperiences: Experience[];
 }) {
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
@@ -43,7 +53,7 @@ export default function ExperienceClient({
   });
 
   const createMut = useMutation({
-    mutationFn: (data: any) => createExperience(data),
+    mutationFn: (data: ExperiencePayload) => createExperience(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["experience"] });
       toast.success("Experience created successfully!");
@@ -53,7 +63,7 @@ export default function ExperienceClient({
   });
 
   const updateMut = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: string; data: ExperiencePayload }) =>
       updateExperience(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["experience"] });
@@ -86,9 +96,6 @@ export default function ExperienceClient({
       ubication: expData.ubication,
       color: expData.color,
       achievements: expData.achievements.split("\n").filter(Boolean),
-      techStack: expData.techStack
-        ? expData.techStack.split(",").map((s) => s.trim())
-        : [],
       startDate: new Date(expData.startDate),
       endDate: new Date(expData.endDate),
     };
@@ -103,7 +110,7 @@ export default function ExperienceClient({
     if (confirm("Delete this experience?")) deleteMut.mutate(id);
   };
 
-  const startEdit = (item: any) => {
+  const startEdit = (item: Experience) => {
     setEditingId(item.id);
     setShowForm(true);
     setExpData({
@@ -112,7 +119,6 @@ export default function ExperienceClient({
       ubication: item.ubication,
       color: item.color,
       achievements: item.achievements.join("\n"),
-      techStack: item.techStack.join(", "),
       startDate: new Date(item.startDate).toISOString().slice(0, 10),
       endDate: new Date(item.endDate).toISOString().slice(0, 10),
     });
@@ -297,23 +303,6 @@ export default function ExperienceClient({
                     required
                   />
                 </div>
-
-                {/* Tech Stack */}
-                <div className="md:col-span-2">
-                  <label
-                    className="block text-[10px] font-extrabold uppercase tracking-[0.18em] mb-1.5"
-                    style={{ color: accent }}
-                  >
-                    Tech Stack (comma-separated)
-                  </label>
-                  <input
-                    className="adm-input adm-input-indigo"
-                    value={expData.techStack}
-                    onChange={(e) =>
-                      setExpData({ ...expData, techStack: e.target.value })
-                    }
-                  />
-                </div>
               </div>
 
               <div className="mt-6">
@@ -340,7 +329,7 @@ export default function ExperienceClient({
         />
       ) : (
         <div className="grid gap-6 grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
-          {experiences.map((exp: any) => (
+          {experiences.map((exp) => (
             <div
               key={exp.id}
               className="adm-card"
@@ -364,17 +353,6 @@ export default function ExperienceClient({
                 {new Date(exp.startDate).toLocaleDateString()} -{" "}
                 {new Date(exp.endDate).toLocaleDateString()}
               </p>
-
-              <div className="flex flex-wrap gap-1.5">
-                {exp.techStack.map((t: string, i: number) => (
-                  <span
-                    key={i}
-                    className="bg-white/5 text-gray-300 px-2 py-1 rounded-md text-[10px]"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
             </div>
           ))}
         </div>
