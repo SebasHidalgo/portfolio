@@ -1,6 +1,5 @@
 import Providers from "./components/Providers";
 import AdminSidebar from "./components/AdminSidebar";
-import CustomCursor from "@/app/components/CustomCursor";
 
 export const metadata = {
   title: "Admin Dashboard | Portfolio",
@@ -13,8 +12,6 @@ export default function AdminLayout({
 }) {
   return (
     <Providers>
-      <CustomCursor />
-
       <div className="min-h-screen bg-background flex">
         <AdminSidebar />
         <main className="flex-1 overflow-y-auto p-12">

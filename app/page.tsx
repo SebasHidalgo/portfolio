@@ -7,7 +7,6 @@ import AboutSection from "./components/AboutSection";
 import ProjectsSection from "./components/ProjectsSection";
 import ExperienceSection from "./components/ExperienceSection";
 import ContactSection from "./components/ContactSection";
-import CustomCursor from "./components/CustomCursor"; // Changed from dynamic import
 import prisma from "@/lib/database/prisma";
 import AdminFloatingButton from "./components/AdminFloatingButton";
 
@@ -35,7 +34,6 @@ export default async function Home() {
 
   return (
     <>
-      <CustomCursor />
       <ParticleCanvas />
 
       {/* Background gradient overlay */}
