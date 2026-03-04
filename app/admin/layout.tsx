@@ -11,9 +11,9 @@ export default function AdminLayout({
 }) {
   return (
     <Providers>
-      <div className="min-h-screen bg-background flex">
+      <div className="h-screen bg-background flex overflow-hidden">
         <AdminSidebar />
-        <main className="flex-1 overflow-y-auto p-12">
+        <main className="flex-1 ml-[240px] overflow-y-auto p-12">
           <div className="max-w-[1100px] mx-auto">{children}</div>
         </main>
       </div>

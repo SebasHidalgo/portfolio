@@ -56,7 +56,7 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[240px] flex flex-col px-4 py-7 border-r border-white/10 bg-white/5 backdrop-blur-[14px]">
+    <aside className="fixed top-0 left-0 h-screen w-[240px] flex flex-col px-4 py-7 border-r border-white/10 bg-white/5 backdrop-blur-[14px]">
       {/* Logo */}
       <div className="flex items-center gap-3 mb-9 pl-2">
         <div className="w-10 h-10 rounded-xl bg-[linear-gradient(135deg,#5050f7,#bc13fe)] flex items-center justify-center text-white font-extrabold text-sm">
