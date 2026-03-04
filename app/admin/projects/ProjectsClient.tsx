@@ -5,6 +5,7 @@ import { Project } from "@/types";
 import { EmptyState, Header, Card } from "@/app/admin/components";
 import { useCrud } from "@/app/admin/hooks/useCrud";
 import { ProjectForm } from "./ProjectsForm";
+import { supabase } from "@/lib/supabaseClient";
 import {
   getProjects,
   createProject,
@@ -58,6 +59,18 @@ export default function ProjectsClient({
 
   const handleDelete = (id: string) => {
     if (confirm("Delete this project?")) {
+      const project = projects.find((p) => p.id === id);
+      if (project && project.image) {
+        const oldFileName = project.image.split("/").pop();
+        if (oldFileName) {
+          supabase.storage
+            .from("projects")
+            .remove([oldFileName])
+            .catch((err: unknown) =>
+              console.error("Error al eliminar la imagen:", err),
+            );
+        }
+      }
       deleteMut.mutate(id);
     }
   };
@@ -106,15 +119,26 @@ export default function ProjectsClient({
               }}
               onDelete={() => handleDelete(project.id)}
             >
+              {project.image && (
+                <div className="w-full h-32 mb-4 rounded-md overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => (e.currentTarget.style.display = "none")}
+                  />
+                </div>
+              )}
               <p className="text-sm text-gray-400 line-clamp-2 mb-4">
                 {project.description}
               </p>
 
-              <div className="flex flex-wrap gap-2 mt-auto">
+              <div className="flex flex-wrap gap-2 mt-auto text-left">
                 {project.techStack.slice(0, 3).map((tech, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 rounded-lg text-[11px] font-semibold"
+                    className="px-3 py-1 rounded-lg text-[11px] font-semibold shrink-0"
                     style={{
                       background: `${accent}15`,
                       color: accent,
