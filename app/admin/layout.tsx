@@ -13,7 +13,7 @@ export default function AdminLayout({
     <Providers>
       <div className="h-screen bg-background flex overflow-hidden">
         <AdminSidebar />
-        <main className="flex-1 ml-[240px] overflow-y-auto p-12">
+        <main className="flex-1 md:ml-[240px] overflow-y-auto p-6 md:p-12 pt-20 md:pt-12">
           <div className="max-w-[1100px] mx-auto">{children}</div>
         </main>
       </div>

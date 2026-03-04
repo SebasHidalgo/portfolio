@@ -18,10 +18,10 @@ export function Header({
   addLabel,
 }: Props) {
   return (
-    <div className="flex items-center justify-between mb-9">
+    <div className="flex flex-col gap-3 md:gap-0 md:flex-row items-center justify-between mb-9">
       <div>
         <p
-          className="text-[11px] font-bold uppercase tracking-[0.18em] mb-1.5"
+          className="text-[11px] font-bold uppercase tracking-[0.18em] mb-1.5 text-center md:text-left"
           style={{ color: accent }}
         >
           // {String(count).padStart(2, "0")} items

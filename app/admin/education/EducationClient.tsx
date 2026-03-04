@@ -87,7 +87,7 @@ export default function EducationClient({
           onClick={() => setShowForm(true)}
         />
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 xl:grid-cols-3">
           {educations.map((edu) => (
             <Card
               key={edu.id}
