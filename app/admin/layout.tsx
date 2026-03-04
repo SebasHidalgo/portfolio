@@ -1,5 +1,4 @@
-import Providers from "./components/Providers";
-import AdminSidebar from "./components/AdminSidebar";
+import { Providers, AdminSidebar } from "@/app/admin/components";
 
 export const metadata = {
   title: "Admin Dashboard | Portfolio",
