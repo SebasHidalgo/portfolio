@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Skill } from "@/types";
+import Link from "next/link";
+import { Download } from "lucide-react";
 
 const traits = [
   { icon: "🧩", title: "Problem Solver", desc: "Lógico & Creativo" },
@@ -19,6 +21,7 @@ interface AboutSectionProps {
 export default function AboutSection({ skills }: AboutSectionProps) {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const resumeURL = process.env.NEXT_PUBLIC_RESUME_URL!;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -166,23 +169,14 @@ export default function AboutSection({ skills }: AboutSectionProps) {
 
             {/* Download CV */}
             <div className="mt-8">
-              <a
-                href="/cv.pdf"
-                download
+              <Link
+                target="_blank"
+                href={resumeURL}
                 className="btn-primary inline-flex items-center gap-2 no-underline"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                </svg>
+                <Download size={16} />
                 Descargar CV
-              </a>
+              </Link>
             </div>
           </div>
         </div>
