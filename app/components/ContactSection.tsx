@@ -3,6 +3,7 @@
 import { useState } from "react";
 import GithubSVG from "./svg/GithubSVG";
 import LinkedinSVG from "./svg/LinkedinSVG";
+import { Loader, Mail, MapPin, Send } from "lucide-react";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -40,13 +41,15 @@ export default function ContactSection() {
         {/* Header */}
         <div className="text-center mb-16">
           <p className="text-primary font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
-            // 04. CONTACTO
+            // 04. CONTACT
           </p>
 
-          <h2 className="section-title gradient-text-blue-purple">Hablemos</h2>
+          <h2 className="section-title gradient-text-blue-purple">
+            Let's Talk
+          </h2>
 
           <p className="section-subtitle">
-            ¿Tienes un proyecto en mente? ¡Me encantaría escucharte!
+            Have a project in mind? I'd love to hear about it!
           </p>
         </div>
 
@@ -56,55 +59,27 @@ export default function ContactSection() {
           <div className="flex flex-col gap-6">
             {/* Availability */}
             <div className="glass p-6 rounded-2xl border border-green-400/20">
-              <div className="flex items-center gap-2.5 mb-2">
+              <div className="flex items-center justify-center gap-2.5">
                 <span className="w-[10px] h-[10px] rounded-full bg-green-400 shadow-[0_0_10px_#4ade80] animate-pulse-dot" />
                 <span className="text-[0.9rem] font-semibold text-green-400">
-                  Disponible para oportunidades
+                  Available for opportunities
                 </span>
               </div>
-              <p className="text-[0.85rem] text-muted">
-                Actualmente buscando roles de Full Stack Developer o Frontend
-                Lead
-              </p>
             </div>
 
             {/* Contact Details */}
             {[
               {
-                icon: (
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                ),
+                icon: <Mail size={18} />,
                 label: "Email",
-                value: "Guillermo@example.com",
-                href: "mailto:Guillermo@example.com",
+                value: "sebas.hidalgo2004@gmail.com",
+                href: "sebas.hidalgo2004@gmail.com",
                 color: "#4f8ef7",
               },
               {
-                icon: (
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                ),
-                label: "Ubicación",
-                value: "Ciudad de México, México",
+                icon: <MapPin size={18} />,
+                label: "Location",
+                value: "San José, Costa Rica",
                 href: null,
                 color: "#a855f7",
               },
@@ -147,7 +122,7 @@ export default function ContactSection() {
 
             {/* Social Links */}
             <div className="glass p-6 rounded-xl">
-              <p className="text-[0.85rem] text-muted mb-4">Encuéntrame en</p>
+              <p className="text-[0.85rem] text-muted mb-4">Find me on</p>
 
               <div className="flex gap-3">
                 {[
@@ -190,76 +165,93 @@ export default function ContactSection() {
               <div className="text-center py-12 px-4 flex flex-col items-center gap-4">
                 <div className="text-[4rem]">🚀</div>
                 <h3 className="text-[1.3rem] font-bold text-green-400">
-                  ¡Mensaje enviado!
+                  Message sent!
                 </h3>
                 <p className="text-muted text-[0.95rem]">
-                  Te responderé lo antes posible. ¡Gracias por contactarme!
+                  I will get back to you as soon as possible. Thank you for
+                  contacting me!
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <h3 className="text-[1.2rem] font-bold text-foreground mb-2">
-                  Envíame un mensaje
+                  Send me a message
                 </h3>
 
                 <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1 form-row">
                   <div>
-                    <label className="block text-[0.8rem] text-muted mb-2 font-mono">
-                      Nombre *
+                    <label
+                      htmlFor="name"
+                      className="block text-[0.8rem] text-muted mb-2 font-mono"
+                    >
+                      Name *
                     </label>
                     <input
+                      id="name"
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      placeholder="Tu nombre"
+                      placeholder="Your name"
                       className="form-input"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[0.8rem] text-muted mb-2 font-mono">
+                    <label
+                      htmlFor="email"
+                      className="block text-[0.8rem] text-muted mb-2 font-mono"
+                    >
                       Email *
                     </label>
                     <input
+                      id="email"
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      placeholder="tu@email.com"
+                      placeholder="your.email@example.com"
                       className="form-input"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[0.8rem] text-muted mb-2 font-mono">
-                    Asunto *
+                  <label
+                    htmlFor="subject"
+                    className="block text-[0.8rem] text-muted mb-2 font-mono"
+                  >
+                    Subject *
                   </label>
                   <input
+                    id="subject"
                     type="text"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    placeholder="¿En qué puedo ayudarte?"
+                    placeholder="What can I help you with?"
                     className="form-input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[0.8rem] text-muted mb-2 font-mono">
-                    Mensaje *
+                  <label
+                    htmlFor="message"
+                    className="block text-[0.8rem] text-muted mb-2 font-mono"
+                  >
+                    Message *
                   </label>
                   <textarea
+                    id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     required
                     rows={6}
-                    placeholder="Cuéntame sobre tu proyecto o idea..."
+                    placeholder="Tell me about your project or idea..."
                     className="form-input resize-y min-h-[140px]"
                   />
                 </div>
@@ -267,44 +259,17 @@ export default function ContactSection() {
                 <button
                   type="submit"
                   disabled={sending}
-                  className="
-                btn-primary
-                w-full
-                flex items-center justify-center gap-2
-                text-[1rem] py-[14px]
-                transition-opacity
-                disabled:opacity-80
-              "
+                  className="btn-primary w-full flex items-center justify-center gap-2 text-[1rem] py-[14px] transition-opacity disabled:opacity-80"
                 >
                   {sending ? (
                     <>
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="animate-spin"
-                      >
-                        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                      </svg>
-                      Enviando...
+                      <Loader size={18} className="animate-spin" />
+                      Sending...
                     </>
                   ) : (
                     <>
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <line x1="22" y1="2" x2="11" y2="13" />
-                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                      </svg>
-                      Enviar Mensaje
+                      <Send size={18} />
+                      Send Message
                     </>
                   )}
                 </button>

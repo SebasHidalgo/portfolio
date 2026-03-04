@@ -44,9 +44,9 @@ export default function SkillsClient({
     deleteFn: deleteSkill,
     initialData: initialSkills,
     successMessages: {
-      create: "Skill creada correctamente!",
-      update: "Skill actualizada correctamente!",
-      delete: "Skill eliminada correctamente!",
+      create: "Skill created successfully!",
+      update: "Skill updated successfully!",
+      delete: "Skill deleted successfully!",
     },
   });
 
@@ -83,7 +83,7 @@ export default function SkillsClient({
         accent={accent}
         showForm={showForm}
         toggleForm={() => (showForm ? reset() : setShowForm(true))}
-        addLabel="Agregar Skill"
+        addLabel="Add Skill"
       />
 
       {skills.length > 0 && (

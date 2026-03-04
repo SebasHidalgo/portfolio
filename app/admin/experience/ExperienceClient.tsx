@@ -35,9 +35,9 @@ export default function ExperienceClient({
     deleteFn: deleteExperience,
     initialData: initialExperiences,
     successMessages: {
-      create: "Experiencia creada correctamente!",
-      update: "Experiencia actualizada correctamente!",
-      delete: "Experiencia eliminada correctamente!",
+      create: "Experience created successfully!",
+      update: "Experience updated successfully!",
+      delete: "Experience deleted successfully!",
     },
   });
 
@@ -76,7 +76,7 @@ export default function ExperienceClient({
         accent={accent}
         showForm={showForm}
         toggleForm={() => (showForm ? reset() : setShowForm(true))}
-        addLabel="Agregar Experiencia"
+        addLabel="Add Experience"
       />
 
       {showForm && (

@@ -7,25 +7,7 @@ const typingTexts = [
   "Full Stack Developer",
   "UI/UX Enthusiast",
   "Backend Engineer",
-  "React Specialist",
   "Problem Solver",
-];
-
-const fallbackTechStack = [
-  "React",
-  "Next.js",
-  "TypeScript",
-  "Node.js",
-  "PostgreSQL",
-  "Docker",
-  "AWS",
-  "GraphQL",
-  "Redis",
-  "Prisma",
-  "Tailwind",
-  "Python",
-  "Kubernetes",
-  "MongoDB",
 ];
 
 interface HeroSectionProps {
@@ -33,9 +15,7 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ skills }: HeroSectionProps) {
-  // Use DB skill names in the ticker; fall back to static list if DB is empty
-  const techStack =
-    skills.length > 0 ? skills.map((s) => s.name) : fallbackTechStack;
+  const techStack = skills.map((s) => s.name);
 
   const [displayed, setDisplayed] = useState("");
   const [typingIndex, setTypingIndex] = useState(0);
@@ -78,33 +58,15 @@ export default function HeroSection({ skills }: HeroSectionProps) {
       <div className="absolute top-[30%] right-[10%] w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.12)_0%,transparent_70%)] blur-2xl pointer-events-none" />
       <div className="absolute bottom-[20%] left-[30%] w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.08)_0%,transparent_70%)] blur-2xl pointer-events-none" />
 
-      {/* Floating code card */}
-      <div className="glass animate-float absolute top-[18%] right-[8%] p-4 px-5 rounded-xl hidden flex-col gap-1.5 max-w-[240px]">
-        <div className="font-mono text-[0.75rem] text-primary">
-          <span className="text-secondary">const</span>{" "}
-          <span className="text-accent">dev</span>{" "}
-          <span className="text-muted">= {`{`}</span>
-        </div>
-        <div className="font-mono text-[0.75rem] text-muted pl-3">
-          <span className="text-foreground">passion</span>:{" "}
-          <span className="text-accent">true,</span>
-        </div>
-        <div className="font-mono text-[0.75rem] text-muted pl-3">
-          <span className="text-foreground">coffee</span>:{" "}
-          <span className="text-accent">∞</span>
-        </div>
-        <div className="font-mono text-[0.75rem] text-muted">{`}`}</div>
-      </div>
-
       {/* Status badge */}
       <div className="inline-flex items-center gap-2 px-[18px] py-2 rounded-full mb-8 text-[0.85rem] font-medium text-[#4ade80] bg-[rgba(34,197,94,0.1)] border border-[rgba(34,197,94,0.25)]">
         <span className="w-2 h-2 rounded-full bg-[#4ade80] shadow-[0_0_10px_#4ade80] animate-pulse-dot" />
-        Disponible para nuevas oportunidades
+        Available for new opportunities
       </div>
 
       {/* Main heading */}
       <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[1.1] mb-4 tracking-[-0.02em]">
-        Hola, soy <span className="gradient-text">Guillermo</span>
+        Hello, I'm <span className="gradient-text">Guillermo</span>
       </h1>
 
       {/* Typewriter */}
@@ -115,17 +77,17 @@ export default function HeroSection({ skills }: HeroSectionProps) {
 
       {/* Bio */}
       <p className="text-[1.1rem] text-muted max-w-[600px] leading-[1.8] mb-10">
-        Construyo experiencias web de alto impacto combinando{" "}
-        <span className="text-primary">interfaces elegantes</span> con{" "}
-        <span className="text-secondary">arquitecturas robustas</span>.
-        Apasionado por el código limpio y las soluciones creativas.
+        I build impactful web experiences by combining{" "}
+        <span className="text-primary">beautiful interfaces</span> with{" "}
+        <span className="text-secondary">robust architectures</span>. I'm
+        passionate about clean code and creative solutions.
       </p>
 
       {/* CTA buttons */}
       <div className="flex gap-4 flex-wrap justify-center mb-20">
         <a href="#projects" className="btn-primary no-underline">
           <span className="flex items-center gap-2">
-            Ver Proyectos
+            See Projects
             <svg
               width="16"
               height="16"
@@ -139,7 +101,7 @@ export default function HeroSection({ skills }: HeroSectionProps) {
           </span>
         </a>
         <a href="#contact" className="btn-secondary">
-          Contáctame
+          Contact me
         </a>
       </div>
 

@@ -3,10 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Experience, Education } from "@/types";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 const MONTHS = [
   "Ene",
   "Feb",
@@ -27,11 +23,6 @@ function formatPeriod(startIso: Date, endIso: Date): string {
   const e = endIso;
   return `${MONTHS[s.getMonth()]} ${s.getFullYear()} – ${MONTHS[e.getMonth()]} ${e.getFullYear()}`;
 }
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
 interface ExperienceSectionProps {
   experiences: Experience[];
   educations: Education[];
@@ -87,15 +78,15 @@ export default function ExperienceSection({
         {/* Header */}
         <div className="text-center mb-16">
           <p className="text-accent font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
-            // 03. EXPERIENCIA
+            // 03. EXPERIENCE
           </p>
 
           <h2 className="section-title gradient-text-blue-purple">
-            Trayectoria Profesional
+            Professional Background
           </h2>
 
           <p className="section-subtitle">
-            Mi viaje a través del mundo del desarrollo de software
+            My journey through the world of software development
           </p>
         </div>
 
@@ -211,7 +202,7 @@ export default function ExperienceSection({
         {/* Education */}
         <div className="mt-16">
           <h3 className="text-[1.4rem] font-bold mb-6 text-center text-foreground">
-            Formación Académica
+            Education
           </h3>
 
           <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">

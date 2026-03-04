@@ -18,16 +18,16 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
         {/* Header */}
         <div className="text-center mb-12">
           <p className="text-secondary font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
-            // 02. PROYECTOS
+            // 02. PROJECTS
           </p>
 
           <h2 className="section-title gradient-text-blue-purple">
-            Trabajo Destacado
+            Work Highlight
           </h2>
 
           <p className="section-subtitle">
-            Colección de aplicaciones web de alto rendimiento construidas con
-            tecnologías modernas
+            Collection of high-performance web applications built with modern
+            technologies
           </p>
         </div>
 

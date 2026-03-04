@@ -24,7 +24,7 @@ export default function FormLayout({
 
       <div className="px-8 py-7">
         <h2 className="text-lg font-bold text-white mb-6">
-          {isEditing ? `Editar ${title}` : `Nueva ${title}`}
+          {isEditing ? `Edit ${title}` : `New ${title}`}
         </h2>
 
         <form onSubmit={onSubmit}>
@@ -39,7 +39,7 @@ export default function FormLayout({
               className="w-full py-3 rounded-lg font-bold text-sm text-white disabled:opacity-50"
               style={{ background: accent }}
             >
-              {isPending ? "Guardando..." : `Guardar ${title}`}
+              {isPending ? "Saving..." : `Save ${title}`}
             </button>
           </div>
         </form>

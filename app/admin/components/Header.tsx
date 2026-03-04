@@ -45,7 +45,7 @@ export function Header({
         }
       >
         {showForm ? <X size={20} /> : <Plus size={20} />}
-        {showForm ? "Cancelar" : addLabel}
+        {showForm ? "Cancel" : addLabel}
       </button>
     </div>
   );

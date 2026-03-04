@@ -36,9 +36,9 @@ export default function ProjectsClient({
     deleteFn: deleteProject,
     initialData: initialProjects,
     successMessages: {
-      create: "Proyecto creado correctamente!",
-      update: "Proyecto actualizado correctamente!",
-      delete: "Proyecto eliminado correctamente!",
+      create: "Project created successfully!",
+      update: "Project updated successfully!",
+      delete: "Project deleted successfully!",
     },
   });
 
@@ -67,7 +67,7 @@ export default function ProjectsClient({
             .from("projects")
             .remove([oldFileName])
             .catch((err: unknown) =>
-              console.error("Error al eliminar la imagen:", err),
+              console.error("Error deleting image:", err),
             );
         }
       }
@@ -88,7 +88,7 @@ export default function ProjectsClient({
         accent={accent}
         showForm={showForm}
         toggleForm={() => (showForm ? reset() : setShowForm(true))}
-        addLabel="Agregar Proyecto"
+        addLabel="Add Project"
       />
 
       {showForm && (

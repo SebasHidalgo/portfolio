@@ -63,12 +63,12 @@ export default function EducationClient({
   return (
     <>
       <Header
-        title="Educación"
+        title="Education"
         count={educations.length}
         accent={accent}
         showForm={showForm}
         toggleForm={() => (showForm ? reset() : setShowForm(true))}
-        addLabel={"Agregar Educación"}
+        addLabel={"Add Education"}
       />
 
       {showForm && (

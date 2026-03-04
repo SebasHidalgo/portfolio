@@ -6,10 +6,10 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 
 const traits = [
-  { icon: "🧩", title: "Problem Solver", desc: "Lógico & Creativo" },
-  { icon: "🚀", title: "Tech Enthusiast", desc: "Últimas tecnologías" },
-  { icon: "📚", title: "Aprendiz Continuo", desc: "Mentalidad de crecimiento" },
-  { icon: "🤝", title: "Team Player", desc: "Colaboración primero" },
+  { icon: "🧩", title: "Problem Solver", desc: "Logical & Creative" },
+  { icon: "🚀", title: "Tech Enthusiast", desc: "Latest technologies" },
+  { icon: "📚", title: "Continuous Learner", desc: "Growth mindset" },
+  { icon: "🤝", title: "Team Player", desc: "Collaboration first" },
 ];
 
 const CHIP_COLORS = ["#4f8ef7", "#a855f7", "#22d3ee"];
@@ -44,14 +44,13 @@ export default function AboutSection({ skills }: AboutSectionProps) {
         {/* Header */}
         <div className="text-center mb-16">
           <p className="text-primary font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
-            // 01. SOBRE MÍ
+            // 01. ABOUT ME
           </p>
           <h2 className="section-title gradient-text-blue-purple">
-            Conóceme Mejor
+            Get to Know Me Better
           </h2>
           <p className="section-subtitle">
-            Desarrollador apasionado por crear experiencias digitales
-            extraordinarias
+            Passionate developer creating extraordinary digital experiences
           </p>
         </div>
 
@@ -113,27 +112,25 @@ export default function AboutSection({ skills }: AboutSectionProps) {
         `}
           >
             <h3 className="text-[1.5rem] font-bold mb-4 text-foreground">
-              Una historia de{" "}
-              <span className="gradient-text">código y creatividad</span>
+              A story of{" "}
+              <span className="gradient-text">code and creativity</span>
             </h3>
 
             <p className="text-muted leading-[1.9] mb-5 text-[0.95rem]">
-              Soy un desarrollador Full Stack con pasión por construir
-              interfaces futuristas y backends robustos. Con un ojo agudo para
-              el diseño y un amor por el código limpio, convierto problemas
-              complejos en soluciones elegantes.
+              I am a Full Stack developer passionate about building beautiful
+              interfaces and robust backends. With an eye for design and a love
+              for clean code, I turn complex problems into elegant solutions.
             </p>
 
             <p className="text-muted leading-[1.9] mb-8 text-[0.95rem]">
-              Mi viaje involucra aprendizaje constante y empujar los límites de
-              la tecnología web moderna. Cuando no estoy programando, estoy
-              explorando tendencias en UI/UX, contribuyendo a open source o
-              tomando café ☕.
+              My journey involves constant learning and pushing the boundaries
+              of modern web technology. When I'm not programming, I'm exploring
+              trends in UI/UX, contributing to open source, or just relaxing.
             </p>
 
             {/* Skills */}
             <h4 className="text-[1rem] font-semibold mb-5 text-foreground">
-              Habilidades técnicas
+              Technical Skills
             </h4>
 
             <div className="flex flex-wrap gap-3">
@@ -175,7 +172,7 @@ export default function AboutSection({ skills }: AboutSectionProps) {
                 className="btn-primary inline-flex items-center gap-2 no-underline"
               >
                 <Download size={16} />
-                Descargar CV
+                Download Resume
               </Link>
             </div>
           </div>
