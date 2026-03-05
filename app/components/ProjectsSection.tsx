@@ -3,6 +3,7 @@
 import Link from "next/link";
 import GithubSVG from "./svg/GithubSVG";
 import type { Project } from "@/types";
+import CollapsibleDescription from "./CollapsibleDescription";
 
 interface ProjectsSectionProps {
   projects: Project[];
@@ -61,9 +62,10 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                   {project.title}
                 </h3>
 
-                <p className="text-[0.875rem] text-muted leading-[1.7] mb-4">
-                  {project.description}
-                </p>
+                <CollapsibleDescription
+                  text={project.description}
+                  maxChars={150}
+                />
 
                 {/* Tech stack */}
                 <div className="flex flex-wrap gap-[6px] mb-5">
