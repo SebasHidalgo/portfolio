@@ -116,7 +116,7 @@ export default function AdminSidebar() {
                 className={`flex items-center gap-3 px-[14px] py-[11px] rounded-xl w-full text-left text-[14px] transition-all duration-200 border-l-[3px] ${
                   active
                     ? `font-bold`
-                    : `font-medium text-[#666] border-l-transparent`
+                    : `font-medium text-[#666] border-l-transparent hover:text-white`
                 }`}
                 style={
                   active

@@ -10,11 +10,7 @@ import { getExperiences } from "@/lib/database/tables/experience";
 import { getSkills } from "@/lib/database/tables/skills";
 import { getEducations } from "@/lib/database/tables/education";
 import type { Project, Experience, Education, Skill } from "@/types";
-
-// Client-only heavy canvas – SSR disabled
-// const ParticleCanvas = dynamic(() => import("./components/ParticleCanvas"), {
-//   ssr: false,
-// });
+import ParticleCanvasWrapper from "./components/particles/ParticleCanvasWrapper";
 
 export default async function Home() {
   let projects: Project[] = [];
@@ -75,7 +71,7 @@ export default async function Home() {
 
   return (
     <>
-      {/* <ParticleCanvas /> */}
+      <ParticleCanvasWrapper />
 
       {/* Background gradient overlay */}
       <div

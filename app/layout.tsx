@@ -3,6 +3,7 @@ import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import CustomCursor from "./components/CustomCursor";
+import { Toaster } from "react-hot-toast";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -28,9 +29,9 @@ export const metadata: Metadata = {
     "TypeScript",
     "Portfolio",
   ],
-  authors: [{ name: "Guillermo" }],
+  authors: [{ name: "Guillermo H." }],
   openGraph: {
-    title: "Guillermo | Full Stack Developer",
+    title: "Guillermo H. | Full Stack Developer",
     description: "Building the future, one line of code at a time.",
     type: "website",
   },
@@ -49,6 +50,7 @@ export default function RootLayout({
         >
           <CustomCursor />
           {children}
+          <Toaster position="top-right" />
         </body>
       </html>
     </ClerkProvider>

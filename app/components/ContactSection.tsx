@@ -4,6 +4,9 @@ import { useState } from "react";
 import GithubSVG from "./svg/GithubSVG";
 import LinkedinSVG from "./svg/LinkedinSVG";
 import { Loader, Mail, MapPin, Send } from "lucide-react";
+import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
+import { sendContactEmail } from "@/lib/emailjs";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -24,12 +27,20 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
-    // Simulate sending
-    await new Promise((r) => setTimeout(r, 1800));
-    setSending(false);
-    setSent(true);
-    setFormData({ name: "", email: "", subject: "", message: "" });
-    setTimeout(() => setSent(false), 5000);
+
+    try {
+      await sendContactEmail(formData);
+
+      setSent(true);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      toast.success("Message sent successfully!");
+      setTimeout(() => setSent(false), 5000);
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      toast.error("Failed to send message. Please try again later.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
