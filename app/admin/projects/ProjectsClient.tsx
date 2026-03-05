@@ -5,7 +5,6 @@ import { Project } from "@/types";
 import { EmptyState, Header, Card } from "@/app/admin/components";
 import { useCrud } from "@/app/admin/hooks/useCrud";
 import { ProjectForm } from "./ProjectsForm";
-import { supabase } from "@/lib/supabaseClient";
 import {
   getProjects,
   createProject,
@@ -57,22 +56,25 @@ export default function ProjectsClient({
     }
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Delete this project?")) {
-      const project = projects.find((p) => p.id === id);
-      if (project && project.image) {
-        const oldFileName = project.image.split("/").pop();
-        if (oldFileName) {
-          supabase.storage
-            .from("projects")
-            .remove([oldFileName])
-            .catch((err: unknown) =>
-              console.error("Error deleting image:", err),
-            );
-        }
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this project?")) return;
+
+    const project = projects.find((p) => p.id === id);
+
+    if (project?.image) {
+      const oldFileName = project.image.split("/").pop();
+
+      if (oldFileName) {
+        await fetch("/api/images/delete", {
+          method: "POST",
+          body: JSON.stringify({
+            path: oldFileName,
+          }),
+        });
       }
-      deleteMut.mutate(id);
     }
+
+    deleteMut.mutate(id);
   };
 
   const reset = () => {

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Project } from "@/types";
 import { FormLayout, Label } from "@/app/admin/components";
-import { supabase } from "@/lib/supabaseClient";
 import toast from "react-hot-toast";
 
 type Props = {
@@ -63,41 +62,35 @@ export function ProjectForm({
 
     if (selectedFile) {
       setIsUploading(true);
-      const fileExt = selectedFile.name.split(".").pop();
-      const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
 
-      const { data: uploadData, error } = await supabase.storage
-        .from("projects")
-        .upload(fileName, selectedFile);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const res = await fetch("/api/images/upload", {
+        method: "POST",
+        body: formData,
+      });
 
       setIsUploading(false);
 
-      if (error) {
-        toast.error("Error al subir la imagen: " + error.message);
+      if (!res.ok) {
+        toast.error("Error uploading image");
         return;
       }
 
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("projects").getPublicUrl(uploadData.path);
+      const result = await res.json();
+      imageUrl = result.url;
 
-      imageUrl = publicUrl;
-
-      // Eliminar la imagen anterior si existe y es diferente
       if (editingItem && editingItem.image) {
         const oldFileName = editingItem.image.split("/").pop();
+
         if (oldFileName) {
-          supabase.storage
-            .from("projects")
-            .remove([oldFileName])
-            .catch((err) =>
-              console.error("Error al eliminar la imagen antigua:", err),
-            );
+          await fetch("/api/images/delete", {
+            method: "POST",
+            body: JSON.stringify({ path: oldFileName }),
+          });
         }
       }
-    } else if (!imageUrl) {
-      toast.error("Por favor adjunta una imagen o provee una URL");
-      return;
     }
 
     onSubmit({
