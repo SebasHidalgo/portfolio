@@ -72,7 +72,7 @@ export default function ExperienceSection({
     <section
       id="experience"
       ref={sectionRef}
-      className="relative z-1 py-[100px] px-8 bg-[linear-gradient(180deg,transparent,rgba(168,85,247,0.03),transparent)]"
+      className="relative z-1 py-16 md:py-[100px] px-4 md:px-8 bg-[linear-gradient(180deg,transparent,rgba(168,85,247,0.03),transparent)]"
     >
       <div className="max-w-[1100px] mx-auto">
         {/* Header */}
@@ -102,8 +102,8 @@ export default function ExperienceSection({
           {displayExperiences.map((exp, i) => (
             <div
               key={exp.key}
-              className={`timeline-item relative flex mb-12 transition-all duration-700 ${
-                i % 2 === 0 ? "justify-start" : "justify-end"
+              className={`timeline-item relative flex mb-12 transition-all duration-700 max-md:justify-end ${
+                i % 2 === 0 ? "md:justify-start" : "md:justify-end"
               } ${
                 visible
                   ? "opacity-100 translate-y-0"
@@ -112,7 +112,7 @@ export default function ExperienceSection({
               style={{ transitionDelay: `${i * 0.2}s` }}
             >
               {/* Timeline dot */}
-              <div className="absolute left-1/2 top-6 -translate-x-1/2 z-10 timeline-dot-wrapper">
+              <div className="absolute left-1/2 max-md:left-[21px] top-6 -translate-x-1/2 z-10 timeline-dot-wrapper">
                 <div
                   className="timeline-dot"
                   style={{
@@ -124,8 +124,8 @@ export default function ExperienceSection({
 
               {/* Card */}
               <div
-                className={`glass w-[46%] p-6 rounded-2xl border transition-all duration-300 ${
-                  i % 2 === 0 ? "mr-auto" : "ml-auto"
+                className={`glass max-md:w-[calc(100%-50px)] md:w-[46%] p-6 rounded-2xl border transition-all duration-300 max-md:ml-auto ${
+                  i % 2 === 0 ? "md:mr-auto" : "md:ml-auto"
                 }`}
                 style={{ borderColor: `${exp.color}22` }}
                 onMouseEnter={(e) => {
@@ -205,7 +205,7 @@ export default function ExperienceSection({
             Education
           </h3>
 
-          <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
             {displayEducation.map((edu, i) => (
               <div
                 key={edu.key}
