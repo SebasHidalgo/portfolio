@@ -63,7 +63,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
         </div>
 
         {/* Projects grid */}
-        <div className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(340px,1fr))]">
+        <div className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(340px,1fr))] items-start">
           {projects.map((project, i) => (
             <div
               key={project.title}
@@ -98,12 +98,47 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                 />
 
                 {/* Tech stack */}
-                <div className="flex flex-wrap gap-[6px] mb-5">
-                  {project.techStack.map((t: string) => (
-                    <span key={t} className="tech-chip">
-                      {t}
-                    </span>
-                  ))}
+                <div
+                  className="relative w-full overflow-hidden mb-5 group"
+                  style={{
+                    maskImage:
+                      "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+                    WebkitMaskImage:
+                      "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+                  }}
+                >
+                  <style jsx>{`
+                    @keyframes ticker-${i} {
+                      0% {
+                        transform: translateX(0);
+                      }
+                      100% {
+                        transform: translateX(-50%);
+                      }
+                    }
+                    .animate-ticker-${i} {
+                      animation: ticker-${i} 25s linear infinite;
+                      width: max-content;
+                    }
+                    .group:hover .animate-ticker-${i} {
+                      animation-play-state: paused;
+                    }
+                  `}</style>
+                  <div className={`flex animate-ticker-${i} gap-[6px]`}>
+                    {[
+                      ...project.techStack,
+                      ...project.techStack,
+                      ...project.techStack,
+                      ...project.techStack,
+                    ].map((t: string, idx: number) => (
+                      <span
+                        key={idx}
+                        className="tech-chip shrink-0 whitespace-nowrap"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Action buttons */}
