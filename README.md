@@ -57,7 +57,7 @@ Follow these steps to set up the project locally.
 ### Prerequisites
 
 - Node.js (version 18+ recommended)
-- A PostgreSQL database (e.g., Supabase, Neon, or local PostgreSQL)
+- Docker Desktop (or Docker Engine) for running the local database
 - Accounts for Clerk, Supabase, and EmailJS.
 
 ### 1. Clone the repository
@@ -78,18 +78,22 @@ npm install
 Create a `.env` file in the root directory and add all the necessary variables. Reference the services to get your keys. An example structure could be:
 
 ```env
-# Database configuration (Prisma)
-DATABASE_URL=
-DIRECT_URL=
+# Database configuration (Docker & Prisma)
+POSTGRES_USER='root'
+POSTGRES_PASSWORD='password123'
+POSTGRES_HOST='localhost'
+POSTGRES_PORT='5433'
+POSTGRES_DB='portfolio'
+DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 
 # Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=
 
-# Supabase Storage
+# Supabase Storage & Assets
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_RESUME_URL=
 
 # EmailJS Configuration
 NEXT_PUBLIC_EMAILJS_SERVICE_ID=
@@ -97,9 +101,17 @@ NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
 NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
 ```
 
-### 4. Setup the Database
+### 4. Start the Database (Docker)
 
-Generate Prisma client and push the schema to your database:
+Ensure Docker is running, then start the PostgreSQL container using Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+### 5. Setup the Database
+
+Generate the Prisma client, apply the schema, and seed the mock data:
 
 ```bash
 # Generate the Prisma client
@@ -107,9 +119,12 @@ npx prisma generate
 
 # Apply the schema to your database
 npx prisma db push
+
+# Seed the initial mock data
+npm run seed
 ```
 
-### 5. Run the Development Server
+### 6. Run the Development Server
 
 ```bash
 npm run dev
