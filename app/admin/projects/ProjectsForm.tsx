@@ -5,6 +5,9 @@ import { Project } from "@/types";
 import { FormLayout, Label } from "@/app/admin/components";
 import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
+import { supabaseClient } from "@/lib/supabase/supabaseClient";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { deleteFile, uploadFile } from "@/lib/supabase/helpers";
 
 type Props = {
   editingItem: Project | null;
@@ -98,33 +101,20 @@ export function ProjectForm({
     if (selectedFile) {
       setIsUploading(true);
 
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      const res = await fetch("/api/images/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const uploadedFile = await uploadFile(selectedFile);
+      imageUrl = uploadedFile!;
 
       setIsUploading(false);
-
-      if (!res.ok) {
-        toast.error("Error uploading image");
-        return;
-      }
-
-      const result = await res.json();
-      imageUrl = result.url;
 
       if (editingItem && editingItem.image) {
         const oldFileName = editingItem.image.split("/").pop();
 
         if (oldFileName) {
-          await fetch("/api/images/delete", {
-            method: "POST",
-            body: JSON.stringify({ path: oldFileName }),
-          });
+          deleteFile(oldFileName);
         }
+      } else if (!imageUrl) {
+        toast.error("Please upload an image");
+        return;
       }
     }
 

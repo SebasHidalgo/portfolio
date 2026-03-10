@@ -11,6 +11,8 @@ import {
   updateProject,
   deleteProject,
 } from "@/lib/database/tables/project";
+import { supabaseClient } from "@/lib/supabase/supabaseClient";
+import { deleteFile } from "@/lib/supabase/helpers";
 
 const accent = "#00f2ff";
 
@@ -57,25 +59,17 @@ export default function ProjectsClient({
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this project?")) return;
-
-    const project = projects.find((p) => p.id === id);
-
-    if (project?.image) {
-      const oldFileName = project.image.split("/").pop();
-
-      if (oldFileName) {
-        await fetch("/api/images/delete", {
-          method: "POST",
-          body: JSON.stringify({
-            path: oldFileName,
-          }),
-        });
+  const handleDelete = (id: string) => {
+    if (confirm("Delete this project?")) {
+      const project = projects.find((p) => p.id === id);
+      if (project && project.image) {
+        const oldFileName = project.image.split("/").pop();
+        if (oldFileName) {
+          deleteFile(oldFileName);
+        }
       }
+      deleteMut.mutate(id);
     }
-
-    deleteMut.mutate(id);
   };
 
   const reset = () => {
