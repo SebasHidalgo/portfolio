@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Project } from "@/types";
 import { FormLayout, Label } from "@/app/admin/components";
 import toast from "react-hot-toast";
+import { Trash2 } from "lucide-react";
 
 type Props = {
   editingItem: Project | null;
@@ -244,7 +245,7 @@ export function ProjectForm({
             className="w-4 h-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-1"
             style={{ accentColor: accent }}
           />
-          ¿El proyecto tiene múltiples repositorios (ej. Frontend / Backend)?
+          Does the project have multiple repositories (e.g. Frontend / Backend)?
         </label>
       </div>
 
@@ -265,7 +266,7 @@ export function ProjectForm({
         <div className="md:col-span-2">
           <div className="flex justify-between items-center mb-2">
             <Label htmlFor="githubUrls" accent={accent}>
-              Repositorios
+              Repositories
             </Label>
             <button
               type="button"
@@ -286,7 +287,7 @@ export function ProjectForm({
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              Agregar Repositorio
+              Add Repository
             </button>
           </div>
 
@@ -301,7 +302,7 @@ export function ProjectForm({
                       onChange={(e) =>
                         handleUpdateGithubUrl(idx, "label", e.target.value)
                       }
-                      placeholder="Etiqueta (ej. Frontend)"
+                      placeholder="Label (e.g. Frontend)"
                       required
                     />
                     <input
@@ -310,7 +311,7 @@ export function ProjectForm({
                       onChange={(e) =>
                         handleUpdateGithubUrl(idx, "url", e.target.value)
                       }
-                      placeholder="URL del repositorio"
+                      placeholder="URL of the repository"
                       required
                     />
                   </div>
@@ -318,22 +319,9 @@ export function ProjectForm({
                     type="button"
                     onClick={() => handleRemoveGithubUrl(idx)}
                     className="p-3 bg-red-500/10 text-red-400 rounded-md hover:bg-red-500/20 transition-colors border border-red-500/20 h-[42px]"
-                    title="Eliminar URL"
+                    title="Delete URL"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
+                    <Trash2 size={18} />
                   </button>
                 </div>
               ))}
