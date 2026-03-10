@@ -6,6 +6,7 @@ export type Project = {
     techStack: string[];
     demoUrl: string | null;
     githubUrl: string | null;
+    githubUrls?: { label: string; url: string }[] | null;
 };
 
 export type Experience = {

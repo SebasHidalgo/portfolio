@@ -3,13 +3,16 @@
 import prisma from '@/lib/database/prisma'
 import { revalidatePath } from 'next/cache'
 
-export async function getProjects() {
-    return await prisma.project.findMany({
+import { Project } from '@/types'
+
+export async function getProjects(): Promise<Project[]> {
+    const projects = await prisma.project.findMany({
         orderBy: { createdAt: 'desc' }
     })
+    return projects as any;
 }
 
-export async function createProject(data: { title: string, description: string, image: string, techStack: string[], demoUrl?: string, githubUrl?: string }) {
+export async function createProject(data: { title: string, description: string, image: string, techStack: string[], demoUrl?: string, githubUrl?: string, githubUrls?: any }) {
     const project = await prisma.project.create({ data })
     revalidatePath('/admin/projects')
     revalidatePath('/')

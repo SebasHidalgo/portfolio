@@ -1,15 +1,45 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import GithubSVG from "./svg/GithubSVG";
 import type { Project } from "@/types";
 import CollapsibleDescription from "./CollapsibleDescription";
+import { SquareArrowOutUpRight, X } from "lucide-react";
 
 interface ProjectsSectionProps {
   projects: Project[];
 }
 
 export default function ProjectsSection({ projects }: ProjectsSectionProps) {
+  const [activeProjectModal, setActiveProjectModal] = useState<Project | null>(
+    null,
+  );
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const openModal = (project: Project) => {
+    setActiveProjectModal(project);
+    setTimeout(() => setIsModalVisible(true), 10);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setTimeout(() => {
+      setActiveProjectModal(null);
+    }, 300);
+  };
+
+  useEffect(() => {
+    if (activeProjectModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [activeProjectModal]);
+
   return (
     <section
       id="projects"
@@ -77,33 +107,99 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3 mt-auto">
                   {project.demoUrl && (
                     <Link
                       href={project.demoUrl}
                       target="_blank"
-                      className="btn-primary no-underline text-[0.85rem] px-[18px] py-[9px] flex-1 text-center"
+                      className="btn-primary no-underline text-[0.85rem] px-[18px] py-[9px] flex-1 text-center min-w-[120px]"
                     >
-                      Demo en vivo
+                      Live Demo
                     </Link>
                   )}
 
-                  {project.githubUrl && (
+                  {project.githubUrls && project.githubUrls.length > 0 ? (
+                    <button
+                      onClick={() => openModal(project)}
+                      className="btn-secondary flex items-center justify-center gap-2 text-xs px-[14px] py-[9px]"
+                      title="Ver Repositorios"
+                    >
+                      <GithubSVG width={14} height={14} />
+                      Repositories
+                    </button>
+                  ) : project.githubUrl ? (
                     <Link
                       href={project.githubUrl}
                       target="_blank"
-                      className="btn-secondary flex items-center gap-2 text-xs"
+                      className="btn-secondary flex items-center justify-center gap-2 text-xs px-[14px] py-[9px]"
+                      title="Repositorio Principal"
                     >
                       <GithubSVG width={14} height={14} />
                       GitHub
                     </Link>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Modal for Multiple Repos */}
+      {activeProjectModal && (
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center px-4 transition-all duration-300 ${
+            isModalVisible
+              ? "bg-black/60 backdrop-blur-sm opacity-100"
+              : "bg-black/0 backdrop-blur-none opacity-0"
+          }`}
+          onClick={closeModal}
+        >
+          <div
+            className={`glass max-w-sm w-full p-6 relative transition-all duration-300 transform ${
+              isModalVisible
+                ? "scale-100 translate-y-0 opacity-100"
+                : "scale-95 translate-y-4 opacity-0"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <X size={20} />
+            </button>
+
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <GithubSVG width={20} height={20} />
+              Repositories
+            </h3>
+            <p className="text-gray-400 text-sm mb-6">
+              The project{" "}
+              <span className="text-white font-semibold">
+                {activeProjectModal.title}
+              </span>{" "}
+              is divided into the following repositories:
+            </p>
+
+            <div className="space-y-3">
+              {activeProjectModal.githubUrls?.map((link, idx) => (
+                <Link
+                  key={idx}
+                  href={link.url}
+                  target="_blank"
+                  className="flex justify-between items-center bg-white/5 hover:bg-white/10 p-3 rounded-lg border border-white/10 transition-colors group"
+                >
+                  <span className="font-medium text-sm text-[#00f2ff]">
+                    {link.label}
+                  </span>
+                  <SquareArrowOutUpRight size={16} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

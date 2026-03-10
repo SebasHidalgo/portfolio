@@ -14,6 +14,7 @@ type Props = {
     techStack: string[];
     demoUrl?: string;
     githubUrl?: string;
+    githubUrls?: { label: string; url: string }[];
   }) => void;
   isPending: boolean;
   accent: string;
@@ -26,6 +27,7 @@ const EMPTY = {
   techStack: "",
   demoUrl: "",
   githubUrl: "",
+  githubUrls: [] as { label: string; url: string }[],
 };
 
 export function ProjectForm({
@@ -37,9 +39,38 @@ export function ProjectForm({
   const [data, setData] = useState(EMPTY);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [hasMultipleRepos, setHasMultipleRepos] = useState(false);
+
+  const handleAddGithubUrl = () => {
+    setData({
+      ...data,
+      githubUrls: [...(data.githubUrls || []), { label: "", url: "" }],
+    });
+  };
+
+  const handleUpdateGithubUrl = (
+    index: number,
+    field: "label" | "url",
+    value: string,
+  ) => {
+    const newUrls = [...data.githubUrls];
+    newUrls[index][field] = value;
+    setData({ ...data, githubUrls: newUrls });
+  };
+
+  const handleRemoveGithubUrl = (index: number) => {
+    const newUrls = [...data.githubUrls];
+    newUrls.splice(index, 1);
+    setData({ ...data, githubUrls: newUrls });
+  };
 
   useEffect(() => {
     if (editingItem) {
+      const urlsArray =
+        editingItem.githubUrls && Array.isArray(editingItem.githubUrls)
+          ? editingItem.githubUrls
+          : [];
+
       setData({
         title: editingItem.title,
         description: editingItem.description,
@@ -47,10 +78,13 @@ export function ProjectForm({
         techStack: editingItem.techStack.join(", "),
         demoUrl: editingItem.demoUrl || "",
         githubUrl: editingItem.githubUrl || "",
+        githubUrls: urlsArray,
       });
+      setHasMultipleRepos(urlsArray.length > 0);
       setSelectedFile(null);
     } else {
       setData(EMPTY);
+      setHasMultipleRepos(false);
       setSelectedFile(null);
     }
   }, [editingItem]);
@@ -95,6 +129,11 @@ export function ProjectForm({
 
     onSubmit({
       ...data,
+      githubUrl: hasMultipleRepos ? "" : data.githubUrl,
+      githubUrls:
+        hasMultipleRepos && data.githubUrls
+          ? data.githubUrls.filter((l) => l.label.trim() && l.url.trim())
+          : [],
       image: imageUrl,
       techStack: data.techStack
         .split(",")
@@ -196,18 +235,112 @@ export function ProjectForm({
         />
       </div>
 
-      <div>
-        <Label htmlFor="githubUrl" accent={accent}>
-          GitHub URL
-        </Label>
-        <input
-          id="githubUrl"
-          className="adm-input"
-          value={data.githubUrl}
-          onChange={(e) => setData({ ...data, githubUrl: e.target.value })}
-          placeholder="https://github.com/username/project-name"
-        />
+      <div className="md:col-span-2">
+        <label className="flex items-center gap-3 text-sm text-gray-300 mb-4 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={hasMultipleRepos}
+            onChange={(e) => setHasMultipleRepos(e.target.checked)}
+            className="w-4 h-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-1"
+            style={{ accentColor: accent }}
+          />
+          ¿El proyecto tiene múltiples repositorios (ej. Frontend / Backend)?
+        </label>
       </div>
+
+      {!hasMultipleRepos ? (
+        <div className="md:col-span-2">
+          <Label htmlFor="githubUrl" accent={accent}>
+            GitHub URL
+          </Label>
+          <input
+            id="githubUrl"
+            className="adm-input"
+            value={data.githubUrl}
+            onChange={(e) => setData({ ...data, githubUrl: e.target.value })}
+            placeholder="https://github.com/username/project-name"
+          />
+        </div>
+      ) : (
+        <div className="md:col-span-2">
+          <div className="flex justify-between items-center mb-2">
+            <Label htmlFor="githubUrls" accent={accent}>
+              Repositorios
+            </Label>
+            <button
+              type="button"
+              onClick={handleAddGithubUrl}
+              className="text-xs bg-white/5 border border-white/10 px-3 py-1.5 rounded hover:bg-white/10 flex items-center gap-1.5 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Agregar Repositorio
+            </button>
+          </div>
+
+          {data.githubUrls && data.githubUrls.length > 0 && (
+            <div className="space-y-3 mt-3">
+              {data.githubUrls.map((link, idx) => (
+                <div key={idx} className="flex gap-2 items-start">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 flex-1">
+                    <input
+                      className="adm-input"
+                      value={link.label}
+                      onChange={(e) =>
+                        handleUpdateGithubUrl(idx, "label", e.target.value)
+                      }
+                      placeholder="Etiqueta (ej. Frontend)"
+                      required
+                    />
+                    <input
+                      className="adm-input"
+                      value={link.url}
+                      onChange={(e) =>
+                        handleUpdateGithubUrl(idx, "url", e.target.value)
+                      }
+                      placeholder="URL del repositorio"
+                      required
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveGithubUrl(idx)}
+                    className="p-3 bg-red-500/10 text-red-400 rounded-md hover:bg-red-500/20 transition-colors border border-red-500/20 h-[42px]"
+                    title="Eliminar URL"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div>
         <Label htmlFor="demoUrl" accent={accent}>

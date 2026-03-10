@@ -48,6 +48,7 @@ export default function ProjectsClient({
     techStack: string[];
     demoUrl?: string;
     githubUrl?: string;
+    githubUrls?: { label: string; url: string }[];
   }) => {
     if (editingItem) {
       updateMut.mutate({ id: editingItem.id, data });

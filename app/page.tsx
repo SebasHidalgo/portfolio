@@ -36,6 +36,7 @@ export default async function Home() {
       techStack: p.techStack,
       demoUrl: p.demoUrl ?? null,
       githubUrl: p.githubUrl ?? null,
+      githubUrls: p.githubUrls ?? null
     }));
 
     experiences = dbExperiences.map((e) => ({

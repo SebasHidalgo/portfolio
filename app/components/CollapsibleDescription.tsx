@@ -42,7 +42,7 @@ export default function CollapsibleDescription({ text, maxChars = 150 }: Collaps
           onClick={() => setExpanded(!expanded)}
           className="mt-1 text-blue-500 hover:underline text-[0.85rem]"
         >
-          {expanded ? "Leer menos" : "Leer más"}
+          {expanded ? "Read less" : "Read more"}
         </button>
       )}
     </div>
