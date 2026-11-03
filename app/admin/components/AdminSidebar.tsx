@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useClerk } from "@clerk/nextjs";
+import { signOut } from "@/lib/auth/actions";
 import { PROFILE } from "@/lib/profile";
 
 export const NAV = [
@@ -34,7 +34,6 @@ export const NAV = [
 ];
 
 export default function AdminSidebar() {
-  const { signOut } = useClerk();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -115,14 +114,15 @@ export default function AdminSidebar() {
             Back to portfolio
           </Link>
 
-          <button
-            type="button"
-            onClick={() => signOut({ redirectUrl: "/" })}
-            className="flex items-center gap-3 px-3.5 py-2.5 text-left text-sm font-medium text-error transition-colors hover:bg-paper"
-          >
-            <LogOut size={18} aria-hidden="true" />
-            Sign out
-          </button>
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left text-sm font-medium text-error transition-colors hover:bg-paper"
+            >
+              <LogOut size={18} aria-hidden="true" />
+              Sign out
+            </button>
+          </form>
         </div>
       </aside>
     </>

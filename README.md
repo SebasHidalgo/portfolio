@@ -6,7 +6,7 @@ A modern, dynamic, and fully responsive personal portfolio website built to show
 
 - Dynamic content powered by PostgreSQL
 - Custom Admin Dashboard for content management
-- Secure authentication with Clerk
+- Single-admin authentication with Supabase Auth
 - Image uploads with Supabase Storage
 - Fully responsive UI
 - Modern App Router architecture with Next.js
@@ -27,8 +27,8 @@ A modern, dynamic, and fully responsive personal portfolio website built to show
 
 - **Database:** PostgreSQL
 - **ORM:** [Prisma](https://www.prisma.io/)
-- **Authentication:** [Clerk](https://clerk.com/)
-- **Storage:** [Supabase](https://supabase.com/)
+- **Authentication:** [Supabase Auth](https://supabase.com/docs/guides/auth) (one-time email code, one admin)
+- **Storage:** [Supabase Storage](https://supabase.com/docs/guides/storage)
 - **Email Service:** [EmailJS](https://www.emailjs.com/)
 
 ## 📂 Project Structure
@@ -37,14 +37,14 @@ A modern, dynamic, and fully responsive personal portfolio website built to show
 portfolio/
 ├── app/
 │   ├── admin/            # Admin Dashboard layout, pages, and components
-│   ├── api/              # Next.js API Routes (Serverless Functions)
-│   ├── auth/             # Authentication pages (e.g., Login/Sign-in)
+│   ├── auth/             # Admin login page
 │   ├── components/       # Public-facing UI components (Hero, About, Projects, etc.)
 │   └── page.tsx          # Main portfolio landing page
 ├── lib/
+│   ├── auth/             # requireAdmin(), ADMIN_EMAIL check, sign-in/out actions
 │   ├── database/         # Prisma DB access methods and queries
 │   ├── emailjs.ts        # EmailJS configuration
-│   └── supabaseServer.ts # Supabase client configuration
+│   └── supabase/         # Auth clients (auth/), storage actions, service role client
 ├── prisma/
 │   └── schema.prisma     # Database models and schema declarations
 └── public/               # Static assets
@@ -58,7 +58,7 @@ Follow these steps to set up the project locally.
 
 - Node.js (version 18+ recommended)
 - Docker Desktop (or Docker Engine) for running the local database
-- Accounts for Clerk, Supabase, and EmailJS.
+- Accounts for Supabase and EmailJS.
 
 ### 1. Clone the repository
 
@@ -87,14 +87,11 @@ POSTGRES_DB='portfolio'
 DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 DIRECT_URL="${DATABASE_URL}"
 
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-# Supabase Storage & Assets
+# Supabase Auth & Storage
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+ADMIN_EMAIL=
 NEXT_PUBLIC_RESUME_URL=
 
 # EmailJS Configuration
@@ -106,6 +103,8 @@ NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
 `DATABASE_URL` is the connection the app uses at runtime. `DIRECT_URL` is the one Prisma uses for migrations. Locally both point to the Docker database. On Supabase, set `DATABASE_URL` to the transaction pooler (port `6543`, with `?pgbouncer=true`) and `DIRECT_URL` to the session pooler (port `5432`), because migrations hang on the transaction pooler.
 
 `SUPABASE_SERVICE_ROLE_KEY` (Supabase → Project Settings → API Keys) is used only on the server, by the admin actions that sign image uploads and delete images. It bypasses all storage policies, so never expose it with a `NEXT_PUBLIC_` prefix.
+
+`ADMIN_EMAIL` is the only account allowed into `/admin`. Sign-in uses a one-time code sent by email. Create that user in Supabase (Authentication → Users → Add user, auto-confirmed), turn off public sign-ups, and make the "Magic link or OTP" email template send `{{ .Token }}` instead of a link. If `ADMIN_EMAIL` is empty, nobody can sign in.
 
 ### 4. Start the Database (Docker)
 
@@ -136,7 +135,7 @@ npm run seed
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the portfolio. To access the admin dashboard, navigate to `/admin` (a valid Clerk session is required).
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the portfolio. To access the admin dashboard, sign in at `/auth/login` with the Supabase user whose email matches `ADMIN_EMAIL`.
 
 ## 📝 License
 

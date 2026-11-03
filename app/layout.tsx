@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, B612_Mono } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
 
 const archivo = Archivo({
@@ -45,36 +44,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" className={`${archivo.variable} ${b612Mono.variable}`}>
-        <body className="min-h-dvh">
-          {children}
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                background: "var(--color-ink)",
-                color: "var(--color-paper)",
-                borderRadius: 0,
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.875rem",
+    <html lang="en" className={`${archivo.variable} ${b612Mono.variable}`}>
+      <body className="min-h-dvh">
+        {children}
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "var(--color-ink)",
+              color: "var(--color-paper)",
+              borderRadius: 0,
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.875rem",
+            },
+            success: {
+              iconTheme: {
+                primary: "var(--color-ok)",
+                secondary: "var(--color-paper)",
               },
-              success: {
-                iconTheme: {
-                  primary: "var(--color-ok)",
-                  secondary: "var(--color-paper)",
-                },
+            },
+            error: {
+              iconTheme: {
+                primary: "var(--color-signal)",
+                secondary: "var(--color-paper)",
               },
-              error: {
-                iconTheme: {
-                  primary: "var(--color-signal)",
-                  secondary: "var(--color-paper)",
-                },
-              },
-            }}
-          />
-        </body>
-      </html>
-    </ClerkProvider>
+            },
+          }}
+        />
+      </body>
+    </html>
   );
 }

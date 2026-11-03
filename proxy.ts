@@ -1,16 +1,12 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import type { NextRequest } from "next/server";
+import { updateSession } from "@/lib/supabase/auth/proxy";
 
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
-
-export default clerkMiddleware(async (auth, req) => {
-    if (isAdminRoute(req)) {
-        await auth.protect();
-    }
-});
+export async function proxy(request: NextRequest) {
+  return updateSession(request);
+}
 
 export const config = {
-    matcher: [
-        "/((?!_next|3DModels|public|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-        "/(api|trpc)(.*)",
-    ],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpe?g|gif|webp|avif|ico|css|js|woff2?|ttf|txt|xml|webmanifest)$).*)",
+  ],
 };

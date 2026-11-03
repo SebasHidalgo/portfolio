@@ -1,14 +1,25 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 import { Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { createAuthBrowserClient } from "@/lib/supabase/auth/browser";
 
 export default function AdminFloatingButton() {
-  const { isSignedIn, isLoaded } = useUser();
+  const [signedIn, setSignedIn] = useState(false);
   const router = useRouter();
 
-  if (!isLoaded || !isSignedIn) return null;
+  useEffect(() => {
+    const supabase = createAuthBrowserClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSignedIn(Boolean(session));
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!signedIn) return null;
 
   return (
     <button
