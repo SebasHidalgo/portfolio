@@ -12,11 +12,12 @@ export default function AdminFloatingButton() {
 
   return (
     <button
+      type="button"
       onClick={() => router.push("/admin")}
-      className="fixed bottom-6 right-6 z-30 bg-linear-to-br from-primary to-secondary text-white font-semibold px-3 py-3 
-      rounded-full shadow-lg shadow-purple-500/30 hover:scale-105 hover:shadow-xl transition-all duration-200"
+      aria-label="Open admin dashboard"
+      className="fixed bottom-6 right-6 z-30 flex size-12 items-center justify-center border border-ink bg-ink text-paper shadow-sheet transition-colors hover:bg-signal-ink hover:border-signal-ink"
     >
-      <Settings />
+      <Settings size={20} aria-hidden="true" />
     </button>
   );
 }

@@ -11,10 +11,7 @@ import {
   updateProject,
   deleteProject,
 } from "@/lib/database/tables/project";
-import { supabaseClient } from "@/lib/supabase/supabaseClient";
 import { deleteFile } from "@/lib/supabase/helpers";
-
-const accent = "#00f2ff";
 
 export default function ProjectsClient({
   initialProjects,
@@ -82,7 +79,6 @@ export default function ProjectsClient({
       <Header
         title="Projects"
         count={projects.length}
-        accent={accent}
         showForm={showForm}
         toggleForm={() => (showForm ? reset() : setShowForm(true))}
         addLabel="Add Project"
@@ -93,23 +89,17 @@ export default function ProjectsClient({
           editingItem={editingItem}
           onSubmit={handleSubmit}
           isPending={createMut.isPending || updateMut.isPending}
-          accent={accent}
         />
       )}
 
       {projects.length === 0 ? (
-        <EmptyState
-          accent={accent}
-          label="Project"
-          onClick={() => setShowForm(true)}
-        />
+        <EmptyState label="Project" onClick={() => setShowForm(true)} />
       ) : (
-        <div className="grid gap-6 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
+        <div className="grid gap-5 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
           {projects.map((project) => (
             <Card
               key={project.id}
               title={project.title}
-              accent={accent}
               onEdit={() => {
                 setEditingItem(project);
                 setShowForm(true);
@@ -117,30 +107,24 @@ export default function ProjectsClient({
               onDelete={() => handleDelete(project.id)}
             >
               {project.image && (
-                <div className="w-full h-32 mb-4 rounded-md overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
+                <div className="mb-4 aspect-[16/10] w-full overflow-hidden border border-rule bg-paper">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    className="h-full w-full object-cover"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                   />
                 </div>
               )}
-              <p className="text-sm text-gray-400 line-clamp-2 mb-4">
+              <p className="mb-4 line-clamp-2 text-sm text-ink-2">
                 {project.description}
               </p>
 
-              <div className="flex flex-wrap gap-2 mt-auto text-left">
+              <div className="mt-auto flex flex-wrap gap-2">
                 {project.techStack.slice(0, 3).map((tech, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 rounded-lg text-[11px] font-semibold shrink-0"
-                    style={{
-                      background: `${accent}15`,
-                      color: accent,
-                    }}
-                  >
+                  <span key={i} className="chip">
                     {tech}
                   </span>
                 ))}

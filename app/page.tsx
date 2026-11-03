@@ -4,13 +4,13 @@ import AboutSection from "./components/AboutSection";
 import ProjectsSection from "./components/ProjectsSection";
 import ExperienceSection from "./components/ExperienceSection";
 import ContactSection from "./components/ContactSection";
+import Footer from "./components/Footer";
 import AdminFloatingButton from "./components/AdminFloatingButton";
 import { getProjects } from "@/lib/database/tables/project";
 import { getExperiences } from "@/lib/database/tables/experience";
 import { getSkills } from "@/lib/database/tables/skills";
 import { getEducations } from "@/lib/database/tables/education";
 import type { Project, Experience, Education, Skill } from "@/types";
-import ParticleCanvasWrapper from "./components/particles/ParticleCanvasWrapper";
 
 export default async function Home() {
   let projects: Project[] = [];
@@ -72,29 +72,21 @@ export default async function Home() {
 
   return (
     <>
-      <ParticleCanvasWrapper />
-
-      {/* Background gradient overlay */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at 20% 50%, rgba(79,142,247,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.06) 0%, transparent 50%)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-
       <Navbar />
 
-      <main style={{ position: "relative", zIndex: 1 }}>
-        <HeroSection skills={skills} />
-        <AboutSection skills={skills} />
-        <ProjectsSection projects={projects} />
-        <ExperienceSection experiences={experiences} educations={educations} />
-        <ContactSection />
-      </main>
+      <div className="pt-14 lg:pt-0 lg:pl-14">
+        <main
+          id="main"
+          className="mx-auto max-w-[80rem] px-5 sm:px-8 lg:px-12"
+        >
+          <HeroSection skills={skills} />
+          <AboutSection skills={skills} />
+          <ProjectsSection projects={projects} />
+          <ExperienceSection experiences={experiences} educations={educations} />
+          <ContactSection />
+        </main>
+        <Footer />
+      </div>
 
       <AdminFloatingButton />
     </>

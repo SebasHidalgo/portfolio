@@ -2,167 +2,181 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import GithubPath from "./svg/GithubSVG";
-import LinkedinPath from "./svg/LinkedinSVG";
+import { Menu, X } from "lucide-react";
+import GithubSVG from "./svg/GithubSVG";
+import LinkedinSVG from "./svg/LinkedinSVG";
+import { PROFILE } from "@/lib/profile";
 
 const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#projects", label: "Projects" },
-  { href: "#experience", label: "Experience" },
-  { href: "#contact", label: "Contact" },
+  { href: "#about", id: "about", index: "1", label: "Profile" },
+  { href: "#projects", id: "projects", index: "2", label: "Projects" },
+  { href: "#experience", id: "experience", index: "3", label: "Experience" },
+  { href: "#contact", id: "contact", index: "4", label: "Contact" },
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-
-      const sections = ["about", "projects", "experience", "contact"];
-      for (const id of sections) {
-        const el = document.getElementById(id);
+      let current = "";
+      for (const link of navLinks) {
+        const el = document.getElementById(link.id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom >= 100) {
-            setActiveSection(id);
+          if (rect.top <= 120 && rect.bottom >= 120) {
+            current = link.id;
             break;
           }
         }
       }
+      setActiveSection(current);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 px-8 ${
-        scrolled
-          ? "bg-[rgba(10,10,15,0.85)] backdrop-blur-[20px] border-b border-white/10"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-[1200px] mx-auto flex items-center justify-between h-[72px]">
-        {/* Logo */}
-        <Link href="/" className="no-underline">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-[38px] h-[38px] rounded-[10px] bg-linear-to-br from-primary to-secondary flex items-center 
-            justify-center font-bold text-base shadow-[0_0_20px_rgba(79,142,247,0.4)]"
-            >
-              GH
-            </div>
-          </div>
+    <>
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
+
+      <nav
+        aria-label="Sections"
+        className="fixed inset-y-0 left-0 z-40 hidden w-14 flex-col items-center justify-between bg-signal lg:flex"
+      >
+        <Link
+          href="/"
+          aria-label={`${PROFILE.name}, back to top`}
+          className="flex h-14 w-14 items-center justify-center text-sm font-extrabold tracking-tight text-ink transition-colors hover:bg-ink hover:text-paper"
+        >
+          {PROFILE.initials}
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="desktop-nav flex items-center gap-8 max-md:hidden">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`nav-link transition-colors duration-300 ${
-                activeSection === link.href.slice(1) ? "text-foreground" : ""
-              }`}
-            >
-              {link.label}
-            </a>
-          ))}
+        <ul className="flex flex-col items-center">
+          {navLinks.map((link) => {
+            const active = activeSection === link.id;
+            return (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  aria-current={active ? "location" : undefined}
+                  className={`spine-link ${active ? "is-active" : ""}`}
+                >
+                  <span className="font-mono">{link.index}</span>
+                  <span>{link.label}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
 
-          {/* Social icons */}
-          <div className="flex gap-3">
+        <ul className="mb-3 flex flex-col items-center gap-1">
+          <li>
             <a
-              href="https://github.com/sebashidalgo"
+              href={PROFILE.github}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 border border-white/10 text-muted transition-all duration-300 
-              hover:text-foreground hover:border-[rgba(79,142,247,0.5)] hover:bg-[rgba(79,142,247,0.1)]"
+              className="flex size-10 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-paper"
             >
-              <GithubPath width={18} height={18} />
+              <GithubSVG width={18} height={18} />
             </a>
-
+          </li>
+          <li>
             <a
-              href="https://linkedin.com/in/guillermo-hidalgo-alvarado"
+              href={PROFILE.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 border border-white/10 text-muted transition-all duration-300 
-              hover:text-foreground hover:border-[rgba(79,142,247,0.5)] hover:bg-[rgba(79,142,247,0.1)]"
+              className="flex size-10 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-paper"
             >
-              <LinkedinPath width={18} height={18} />
+              <LinkedinSVG width={18} height={18} />
             </a>
-          </div>
-        </div>
+          </li>
+        </ul>
+      </nav>
 
-        {/* Mobile button */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="mobile-menu-btn hidden max-md:flex bg-none border-none text-foreground cursor-pointer p-2"
-          aria-label="Toggle menu"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-rule bg-paper lg:hidden">
+        <div className="flex h-14 items-center justify-between px-5 sm:px-8">
+          <Link href="/" className="flex items-center gap-3">
+            <span className="flex size-9 items-center justify-center bg-signal text-xs font-extrabold text-ink">
+              {PROFILE.initials}
+            </span>
+            <span className="text-sm font-semibold">{PROFILE.name}</span>
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            className="btn-icon"
           >
-            {mobileOpen ? (
-              <path d="M18 6L6 18M6 6l12 12" />
-            ) : (
-              <path d="M3 12h18M3 6h18M3 18h18" />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div
-          className="
-            bg-[rgba(10,10,15,0.95)]
-            backdrop-blur-[20px]
-            px-8 py-6
-            border-t border-white/10
-            flex flex-col gap-5
-          "
-        >
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="nav-link text-base"
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </a>
-          ))}
-
-          <div className="flex gap-3 pt-2 text-muted">
-            <a
-              href="https://github.com/sebashidalgo"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
-            <span className="text-subtle">|</span>
-            <a
-              href="https://www.linkedin.com/in/guillermo-hidalgo-alvarado"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn
-            </a>
-          </div>
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
-      )}
-    </nav>
+
+        {mobileOpen && (
+          <nav
+            id="mobile-menu"
+            aria-label="Sections"
+            className="border-t border-rule bg-sheet"
+          >
+            <ul>
+              {navLinks.map((link) => (
+                <li key={link.href} className="border-b border-rule-soft">
+                  <a
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-4 px-5 py-4 text-base font-medium sm:px-8"
+                  >
+                    <span className="font-mono text-xs text-signal-ink">
+                      {link.index}
+                    </span>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex gap-6 px-5 py-4 text-sm font-medium sm:px-8">
+              <a
+                href={PROFILE.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link inline-flex items-center gap-2"
+              >
+                <GithubSVG width={16} height={16} />
+                GitHub
+              </a>
+              <a
+                href={PROFILE.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link inline-flex items-center gap-2"
+              >
+                <LinkedinSVG width={16} height={16} />
+                LinkedIn
+              </a>
+            </div>
+          </nav>
+        )}
+      </header>
+    </>
   );
 }

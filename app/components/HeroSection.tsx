@@ -1,145 +1,174 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { ArrowDown, ArrowUpRight, Download } from "lucide-react";
 import type { Skill } from "@/types";
-
-const typingTexts = [
-  "Full Stack Developer",
-  "UI/UX Enthusiast",
-  "Backend Engineer",
-  "Problem Solver",
-];
+import { PROFILE } from "@/lib/profile";
 
 interface HeroSectionProps {
   skills: Skill[];
 }
 
+function pickFocus(skills: Skill[]): string[] {
+  const core = skills.filter(
+    (s) => s.category === "Frontend" || s.category === "Backend",
+  );
+  const source = core.length > 0 ? core : skills;
+  return Array.from(new Set(source.map((s) => s.name))).slice(0, 8);
+}
+
 export default function HeroSection({ skills }: HeroSectionProps) {
-  const techStack = skills.map((s) => s.name);
-
-  const [displayed, setDisplayed] = useState("");
-  const [typingIndex, setTypingIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [deleting, setDeleting] = useState(false);
-
-  useEffect(() => {
-    const current = typingTexts[typingIndex];
-    const speed = deleting ? 60 : 100;
-
-    const timeout = setTimeout(() => {
-      if (!deleting) {
-        if (charIndex < current.length) {
-          setDisplayed(current.slice(0, charIndex + 1));
-          setCharIndex(charIndex + 1);
-        } else {
-          setTimeout(() => setDeleting(true), 2000);
-        }
-      } else {
-        if (charIndex > 0) {
-          setDisplayed(current.slice(0, charIndex - 1));
-          setCharIndex(charIndex - 1);
-        } else {
-          setDeleting(false);
-          setTypingIndex((typingIndex + 1) % typingTexts.length);
-        }
-      }
-    }, speed);
-
-    return () => clearTimeout(timeout);
-  }, [charIndex, deleting, typingIndex]);
+  const focus = pickFocus(skills);
+  const cell = "border-b border-rule p-4 sm:p-5";
 
   return (
     <section
       id="hero"
-      className="relative z-1 min-h-screen flex flex-col justify-center items-center text-center px-8 pt-[80px]"
+      aria-labelledby="hero-title"
+      className="border-b border-ink"
     >
-      {/* Background gradient orbs */}
-      <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(79,142,247,0.12)_0%,transparent_70%)] blur-2xl pointer-events-none" />
-      <div className="absolute top-[30%] right-[10%] w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.12)_0%,transparent_70%)] blur-2xl pointer-events-none" />
-      <div className="absolute bottom-[20%] left-[30%] w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.08)_0%,transparent_70%)] blur-2xl pointer-events-none" />
-
-      {/* Status badge */}
-      <div className="inline-flex items-center gap-2 px-[18px] py-2 rounded-full mb-8 text-[0.85rem] font-medium text-[#4ade80] bg-[rgba(34,197,94,0.1)] border border-[rgba(34,197,94,0.25)]">
-        <span className="w-2 h-2 rounded-full bg-[#4ade80] shadow-[0_0_10px_#4ade80] animate-pulse-dot" />
-        Available for new opportunities
-      </div>
-
-      {/* Main heading */}
-      <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[1.1] mb-4 tracking-[-0.02em]">
-        Hello, I'm <span className="gradient-text">Guillermo</span>
-      </h1>
-
-      {/* Typewriter */}
-      <div className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-semibold h-12 flex items-center justify-center gap-1 mb-6 text-[#c0c8e8]">
-        <span>{displayed}</span>
-        <span className="typing-cursor inline-block w-[3px] h-[1.2em] bg-linear-to-b from-primary to-secondary rounded-[2px] ml-[2px]" />
-      </div>
-
-      {/* Bio */}
-      <p className="text-[1.1rem] text-muted max-w-[600px] leading-[1.8] mb-10">
-        I build impactful web experiences by combining{" "}
-        <span className="text-primary">beautiful interfaces</span> with{" "}
-        <span className="text-secondary">robust architectures</span>. I'm
-        passionate about clean code and creative solutions.
-      </p>
-
-      {/* CTA buttons */}
-      <div className="flex gap-4 flex-wrap justify-center mb-20">
-        <a href="#projects" className="btn-primary no-underline">
-          <span className="flex items-center gap-2">
-            See Projects
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </span>
-        </a>
-        <a href="#contact" className="btn-secondary">
-          Contact me
-        </a>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="text-subtle text-[0.75rem] tracking-[0.15em]">
-          SCROLL
+      <div className="label hidden items-center justify-between border-b border-rule py-4 lg:flex">
+        <span>
+          {PROFILE.name} · {PROFILE.role}
         </span>
-        <div
-          className="w-px h-[60px] animate-[float_2s_ease-in-out_infinite]"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(79,142,247,0.8), transparent)",
-          }}
-        />
+        <ul className="flex gap-6">
+          <li>
+            <a
+              href={PROFILE.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link inline-flex items-center gap-1"
+            >
+              GitHub <ArrowUpRight size={12} aria-hidden="true" />
+            </a>
+          </li>
+          <li>
+            <a
+              href={PROFILE.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link inline-flex items-center gap-1"
+            >
+              LinkedIn <ArrowUpRight size={12} aria-hidden="true" />
+            </a>
+          </li>
+          {PROFILE.resumeUrl && (
+            <li>
+              <a
+                href={PROFILE.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link inline-flex items-center gap-1"
+              >
+                Résumé <Download size={12} aria-hidden="true" />
+              </a>
+            </li>
+          )}
+        </ul>
       </div>
 
-      {/* Tech ticker – populated from DB skills */}
-      <div className="absolute bottom-0 left-0 right-0 overflow-hidden py-4 border-t border-card bg-[linear-gradient(to_right,var(--bg-primary),transparent_5%,transparent_95%,var(--bg-primary))]">
-        <div className="flex gap-12 animate-[ticker_35s_linear_infinite] whitespace-nowrap w-max">
-          {[...techStack, ...techStack].map((tech, i) => (
-            <span
-              key={i}
-              className="text-subtle text-[0.85rem] font-mono flex items-center gap-2"
-            >
-              <span
-                className={`w-1 h-1 rounded-full ${
-                  i % 3 === 0
-                    ? "bg-primary"
-                    : i % 3 === 1
-                      ? "bg-secondary"
-                      : "bg-accent"
-                }`}
-              />
-              {tech}
-            </span>
-          ))}
+      <div className="grid gap-12 py-16 lg:min-h-[calc(100dvh-3.5rem)] lg:grid-cols-12 lg:items-center lg:gap-10 lg:py-20">
+        <div className="lg:col-span-7">
+          <h1
+            id="hero-title"
+            className="animate-rise font-stretch-expanded text-[clamp(2.75rem,7.5vw,6rem)] font-extrabold leading-[0.95] tracking-[-0.03em]"
+          >
+            {PROFILE.name}
+          </h1>
+
+          <p className="animate-rise mt-6 text-xl font-medium [animation-delay:80ms] sm:text-2xl">
+            {PROFILE.role}
+            <span className="text-ink-2"> · {PROFILE.location}</span>
+          </p>
+
+          <p className="animate-rise mt-6 max-w-[58ch] text-base leading-[1.65] text-ink-2 [animation-delay:160ms] sm:text-lg">
+            I build impactful web experiences by combining beautiful
+            interfaces with robust architectures. I&apos;m passionate about
+            clean code and creative solutions.
+          </p>
+
+          <div className="animate-rise mt-10 flex flex-wrap gap-3 [animation-delay:240ms]">
+            <a href="#projects" className="btn btn-primary">
+              See projects <ArrowDown size={16} aria-hidden="true" />
+            </a>
+            <a href="#contact" className="btn btn-secondary">
+              Contact me
+            </a>
+          </div>
         </div>
+
+        <dl className="animate-rise grid grid-cols-2 border border-ink bg-sheet [animation-delay:320ms] lg:col-span-5">
+          <div className={`${cell} border-r`}>
+            <dt className="label">Role</dt>
+            <dd className="mt-1 text-sm font-medium sm:text-[0.9375rem]">
+              {PROFILE.role}
+            </dd>
+          </div>
+          <div className={cell}>
+            <dt className="label">Status</dt>
+            <dd className="mt-1 flex items-center gap-2 text-sm font-medium text-ok sm:text-[0.9375rem]">
+              <span aria-hidden="true" className="size-2 shrink-0 bg-ok" />
+              Available for new opportunities
+            </dd>
+          </div>
+          <div className={`${cell} col-span-2 min-w-0`}>
+            <dt className="label">Email</dt>
+            <dd className="mt-1 text-sm font-medium sm:text-[0.9375rem]">
+              <a
+                href={`mailto:${PROFILE.email}`}
+                className="link wrap-anywhere"
+              >
+                {PROFILE.email}
+              </a>
+            </dd>
+          </div>
+          <div className={`${cell} border-r`}>
+            <dt className="label">Location</dt>
+            <dd className="mt-1 text-sm font-medium sm:text-[0.9375rem]">
+              {PROFILE.location}
+            </dd>
+          </div>
+          <div className={cell}>
+            <dt className="label">Links</dt>
+            <dd className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium">
+              <a
+                href={PROFILE.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link inline-flex items-center gap-1"
+              >
+                GitHub <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+              <a
+                href={PROFILE.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link inline-flex items-center gap-1"
+              >
+                LinkedIn <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+              {PROFILE.resumeUrl && (
+                <a
+                  href={PROFILE.resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link inline-flex items-center gap-1"
+                >
+                  Résumé <Download size={14} aria-hidden="true" />
+                </a>
+              )}
+            </dd>
+          </div>
+          {focus.length > 0 && (
+            <div className="col-span-2 p-4 sm:p-5">
+              <dt className="label">Focus</dt>
+              <dd className="mt-2 flex flex-wrap gap-2">
+                {focus.map((name) => (
+                  <span key={name} className="chip">
+                    {name}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          )}
+        </dl>
       </div>
     </section>
   );

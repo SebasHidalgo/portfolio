@@ -3,7 +3,6 @@ type FormLayoutProps = {
   isEditing: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   isPending: boolean;
-  accent: string;
   title: string;
 };
 
@@ -12,38 +11,27 @@ export default function FormLayout({
   isEditing,
   onSubmit,
   isPending,
-  accent,
   title,
 }: FormLayoutProps) {
   return (
-    <div className="adm-glass rounded-2xl overflow-hidden mb-10">
-      <div
-        className="h-[3px]"
-        style={{ background: `linear-gradient(90deg,${accent},${accent}40)` }}
-      />
+    <div className="sheet mb-10 p-6 sm:p-8">
+      <h2 className="mb-6 text-lg font-bold">
+        {isEditing ? `Edit ${title}` : `New ${title}`}
+      </h2>
 
-      <div className="px-8 py-7">
-        <h2 className="text-lg font-bold text-white mb-6">
-          {isEditing ? `Edit ${title}` : `New ${title}`}
-        </h2>
+      <form onSubmit={onSubmit}>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">{children}</div>
 
-        <form onSubmit={onSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {children}
-          </div>
-
-          <div className="mt-6">
-            <button
-              type="submit"
-              disabled={isPending}
-              className="w-full py-3 rounded-lg font-bold text-sm text-white disabled:opacity-50"
-              style={{ background: accent }}
-            >
-              {isPending ? "Saving..." : `Save ${title}`}
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="mt-8">
+          <button
+            type="submit"
+            disabled={isPending}
+            className="btn btn-primary w-full sm:w-auto"
+          >
+            {isPending ? "Saving..." : `Save ${title}`}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

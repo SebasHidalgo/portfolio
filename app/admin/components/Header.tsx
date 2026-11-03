@@ -3,48 +3,31 @@ import { Plus, X } from "lucide-react";
 type Props = {
   title: string;
   count: number;
-  accent: string;
   showForm: boolean;
   toggleForm: () => void;
   addLabel: string;
 };
 
-export function Header({
-  title,
-  count,
-  accent,
-  showForm,
-  toggleForm,
-  addLabel,
-}: Props) {
+export function Header({ title, count, showForm, toggleForm, addLabel }: Props) {
   return (
-    <div className="flex flex-col gap-3 md:gap-0 md:flex-row items-center justify-between mb-9">
+    <div className="mb-8 flex flex-col gap-4 border-b border-ink pb-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <p
-          className="text-[11px] font-bold uppercase tracking-[0.18em] mb-1.5 text-center md:text-left"
-          style={{ color: accent }}
-        >
-          // {String(count).padStart(2, "0")} items
+        <h1 className="h2">{title}</h1>
+        <p className="label mt-2">
+          {count} {count === 1 ? "item" : "items"}
         </p>
-
-        <h1 className="text-[30px] font-extrabold text-white">{title}</h1>
       </div>
 
       <button
+        type="button"
         onClick={toggleForm}
-        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200
-          ${showForm ? "bg-white/10 text-gray-400" : "text-white"}
-        `}
-        style={
-          showForm
-            ? {}
-            : {
-                background: `linear-gradient(135deg,${accent},${accent}99)`,
-                boxShadow: `0 0 24px ${accent}40`,
-              }
-        }
+        className={`btn ${showForm ? "btn-secondary" : "btn-primary"}`}
       >
-        {showForm ? <X size={20} /> : <Plus size={20} />}
+        {showForm ? (
+          <X size={16} aria-hidden="true" />
+        ) : (
+          <Plus size={16} aria-hidden="true" />
+        )}
         {showForm ? "Cancel" : addLabel}
       </button>
     </div>

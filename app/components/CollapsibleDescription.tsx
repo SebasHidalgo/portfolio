@@ -5,7 +5,10 @@ interface CollapsibleDescriptionProps {
   maxChars?: number;
 }
 
-export default function CollapsibleDescription({ text, maxChars = 150 }: CollapsibleDescriptionProps) {
+export default function CollapsibleDescription({
+  text,
+  maxChars = 150,
+}: CollapsibleDescriptionProps) {
   const [expanded, setExpanded] = useState(false);
   const [maxHeight, setMaxHeight] = useState<string>("0px");
   const contentRef = useRef<HTMLDivElement>(null);
@@ -16,22 +19,22 @@ export default function CollapsibleDescription({ text, maxChars = 150 }: Collaps
   useEffect(() => {
     if (contentRef.current) {
       if (expanded) {
-        setMaxHeight(`${contentRef.current.scrollHeight}px`); 
+        setMaxHeight(`${contentRef.current.scrollHeight}px`);
       } else {
         const scrollHeight = contentRef.current.scrollHeight;
         setMaxHeight(`${scrollHeight}px`);
         requestAnimationFrame(() => {
-          setMaxHeight("4.2em"); 
+          setMaxHeight("4.2em");
         });
       }
     }
   }, [expanded]);
 
   return (
-    <div className="mb-4">
+    <div className="mt-3 max-w-[62ch]">
       <div
         ref={contentRef}
-        className="text-[0.875rem] text-muted leading-[1.7] overflow-hidden transition-[max-height] duration-300 ease-in-out"
+        className="overflow-hidden text-[0.9375rem] leading-[1.7] text-ink-2 transition-[max-height] duration-300 ease-in-out"
         style={{ maxHeight }}
       >
         {expanded || !isLong ? text : previewText}
@@ -39,8 +42,10 @@ export default function CollapsibleDescription({ text, maxChars = 150 }: Collaps
 
       {isLong && (
         <button
+          type="button"
           onClick={() => setExpanded(!expanded)}
-          className="mt-1 text-blue-500 hover:underline text-[0.85rem]"
+          aria-expanded={expanded}
+          className="link mt-2 text-sm font-medium"
         >
           {expanded ? "Read less" : "Read more"}
         </button>

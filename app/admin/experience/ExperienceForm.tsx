@@ -16,25 +16,19 @@ type Props = {
     endDate: Date;
   }) => void;
   isPending: boolean;
-  accent: string;
 };
 
 const EMPTY = {
   company: "",
   position: "",
   ubication: "",
-  color: "#5050f7",
+  color: "#c4330a",
   achievements: "",
   startDate: "",
   endDate: "",
 };
 
-export function ExperienceForm({
-  editingItem,
-  onSubmit,
-  isPending,
-  accent,
-}: Props) {
+export function ExperienceForm({ editingItem, onSubmit, isPending }: Props) {
   const [data, setData] = useState(EMPTY);
 
   useEffect(() => {
@@ -71,17 +65,14 @@ export function ExperienceForm({
     <FormLayout
       onSubmit={handleSubmit}
       isPending={isPending}
-      accent={accent}
       isEditing={!!editingItem}
       title="Experience"
     >
       <div>
-        <Label htmlFor="company" accent={accent}>
-          Company *
-        </Label>
+        <Label htmlFor="company">Company *</Label>
         <input
           id="company"
-          className="adm-input"
+          className="input"
           value={data.company}
           onChange={(e) => setData({ ...data, company: e.target.value })}
           required
@@ -90,12 +81,10 @@ export function ExperienceForm({
       </div>
 
       <div>
-        <Label htmlFor="position" accent={accent}>
-          Position *
-        </Label>
+        <Label htmlFor="position">Position *</Label>
         <input
           id="position"
-          className="adm-input"
+          className="input"
           value={data.position}
           onChange={(e) => setData({ ...data, position: e.target.value })}
           required
@@ -104,12 +93,10 @@ export function ExperienceForm({
       </div>
 
       <div>
-        <Label htmlFor="ubication" accent={accent}>
-          Location *
-        </Label>
+        <Label htmlFor="ubication">Location *</Label>
         <input
           id="ubication"
-          className="adm-input"
+          className="input"
           value={data.ubication}
           onChange={(e) => setData({ ...data, ubication: e.target.value })}
           required
@@ -118,55 +105,45 @@ export function ExperienceForm({
       </div>
 
       <div>
-        <Label htmlFor="color" accent={accent}>
-          Color Tag
-        </Label>
+        <Label htmlFor="color">Color Tag</Label>
         <input
           id="color"
           type="color"
-          className="adm-input h-[46px] cursor-pointer"
+          className="input"
           value={data.color}
           onChange={(e) => setData({ ...data, color: e.target.value })}
         />
       </div>
 
       <div>
-        <Label htmlFor="startDate" accent={accent}>
-          Start Date *
-        </Label>
+        <Label htmlFor="startDate">Start Date *</Label>
         <input
           id="startDate"
           type="date"
-          className="adm-input"
+          className="input"
           value={data.startDate}
           onChange={(e) => setData({ ...data, startDate: e.target.value })}
           required
-          placeholder="Select start date"
         />
       </div>
 
       <div>
-        <Label htmlFor="endDate" accent={accent}>
-          End Date *
-        </Label>
+        <Label htmlFor="endDate">End Date *</Label>
         <input
           id="endDate"
           type="date"
-          className="adm-input"
+          className="input"
           value={data.endDate}
           onChange={(e) => setData({ ...data, endDate: e.target.value })}
           required
-          placeholder="Select end date"
         />
       </div>
 
       <div className="md:col-span-2">
-        <Label htmlFor="achievements" accent={accent}>
-          Achievements (one per line) *
-        </Label>
+        <Label htmlFor="achievements">Achievements (one per line) *</Label>
         <textarea
           id="achievements"
-          className="adm-input resize-y"
+          className="input resize-y"
           rows={4}
           value={data.achievements}
           onChange={(e) => setData({ ...data, achievements: e.target.value })}

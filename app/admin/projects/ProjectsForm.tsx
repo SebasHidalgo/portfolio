@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import { Project } from "@/types";
 import { FormLayout, Label } from "@/app/admin/components";
 import toast from "react-hot-toast";
-import { Trash2 } from "lucide-react";
-import { supabaseClient } from "@/lib/supabase/supabaseClient";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { Plus, Trash2 } from "lucide-react";
 import { deleteFile, uploadFile } from "@/lib/supabase/helpers";
 
 type Props = {
@@ -21,7 +19,6 @@ type Props = {
     githubUrls?: { label: string; url: string }[];
   }) => void;
   isPending: boolean;
-  accent: string;
 };
 
 const EMPTY = {
@@ -34,12 +31,7 @@ const EMPTY = {
   githubUrls: [] as { label: string; url: string }[],
 };
 
-export function ProjectForm({
-  editingItem,
-  onSubmit,
-  isPending,
-  accent,
-}: Props) {
+export function ProjectForm({ editingItem, onSubmit, isPending }: Props) {
   const [data, setData] = useState(EMPTY);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -137,17 +129,14 @@ export function ProjectForm({
     <FormLayout
       onSubmit={handleSubmit}
       isPending={isPending || isUploading}
-      accent={accent}
       isEditing={!!editingItem}
       title="Project"
     >
       <div className="md:col-span-2">
-        <Label htmlFor="title" accent={accent}>
-          Project Title *
-        </Label>
+        <Label htmlFor="title">Project Title *</Label>
         <input
           id="title"
-          className="adm-input"
+          className="input"
           value={data.title}
           onChange={(e) => setData({ ...data, title: e.target.value })}
           required
@@ -156,12 +145,10 @@ export function ProjectForm({
       </div>
 
       <div className="md:col-span-2">
-        <Label htmlFor="description" accent={accent}>
-          Description *
-        </Label>
+        <Label htmlFor="description">Description *</Label>
         <textarea
           id="description"
-          className="adm-input resize-y"
+          className="input resize-y"
           rows={3}
           value={data.description}
           onChange={(e) => setData({ ...data, description: e.target.value })}
@@ -171,16 +158,14 @@ export function ProjectForm({
       </div>
 
       <div className="md:col-span-2">
-        <Label htmlFor="image" accent={accent}>
-          Image *
-        </Label>
-        <div className="flex gap-4 items-start pb-2">
+        <Label htmlFor="image">Image *</Label>
+        <div className="flex items-start gap-4">
           <div className="flex-1">
             <input
               id="image"
               type="file"
               accept="image/*"
-              className="adm-input w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20"
+              className="input cursor-pointer"
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0) {
                   setSelectedFile(e.target.files[0]);
@@ -189,22 +174,22 @@ export function ProjectForm({
               required={!editingItem && !data.image}
             />
             {(data.image || selectedFile) && (
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="mt-2 text-xs text-ink-2">
                 {selectedFile
-                  ? `Seleccionado: ${selectedFile.name}`
-                  : `(Imagen actual guardada)`}
+                  ? `Selected: ${selectedFile.name}`
+                  : "(Current image saved)"}
               </p>
             )}
           </div>
           {(selectedFile || data.image) && (
-            <div className="w-16 h-16 shrink-0 rounded-md overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center">
+            <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden border border-rule bg-paper">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={
                   selectedFile ? URL.createObjectURL(selectedFile) : data.image
                 }
                 alt="Preview"
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
                 onError={(e) => (e.currentTarget.style.display = "none")}
               />
             </div>
@@ -213,12 +198,10 @@ export function ProjectForm({
       </div>
 
       <div className="md:col-span-2">
-        <Label htmlFor="techStack" accent={accent}>
-          Tech Stack (comma separated) *
-        </Label>
+        <Label htmlFor="techStack">Tech Stack (comma separated) *</Label>
         <input
           id="techStack"
-          className="adm-input"
+          className="input"
           value={data.techStack}
           onChange={(e) => setData({ ...data, techStack: e.target.value })}
           required
@@ -227,13 +210,12 @@ export function ProjectForm({
       </div>
 
       <div className="md:col-span-2">
-        <label className="flex items-center gap-3 text-sm text-gray-300 mb-4 cursor-pointer">
+        <label className="flex cursor-pointer items-center gap-3 text-sm">
           <input
             type="checkbox"
             checked={hasMultipleRepos}
             onChange={(e) => setHasMultipleRepos(e.target.checked)}
-            className="w-4 h-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-1"
-            style={{ accentColor: accent }}
+            className="size-4 accent-signal-ink"
           />
           Does the project have multiple repositories (e.g. Frontend / Backend)?
         </label>
@@ -241,12 +223,10 @@ export function ProjectForm({
 
       {!hasMultipleRepos ? (
         <div className="md:col-span-2">
-          <Label htmlFor="githubUrl" accent={accent}>
-            GitHub URL
-          </Label>
+          <Label htmlFor="githubUrl">GitHub URL</Label>
           <input
             id="githubUrl"
-            className="adm-input"
+            className="input"
             value={data.githubUrl}
             onChange={(e) => setData({ ...data, githubUrl: e.target.value })}
             placeholder="https://github.com/username/project-name"
@@ -254,64 +234,51 @@ export function ProjectForm({
         </div>
       ) : (
         <div className="md:col-span-2">
-          <div className="flex justify-between items-center mb-2">
-            <Label htmlFor="githubUrls" accent={accent}>
-              Repositories
-            </Label>
+          <div className="mb-2 flex items-center justify-between">
+            <Label htmlFor="githubUrls">Repositories</Label>
             <button
               type="button"
               onClick={handleAddGithubUrl}
-              className="text-xs bg-white/5 border border-white/10 px-3 py-1.5 rounded hover:bg-white/10 flex items-center gap-1.5 transition-colors"
+              className="btn btn-secondary min-h-9 px-3 text-[0.6875rem]"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+              <Plus size={14} aria-hidden="true" />
               Add Repository
             </button>
           </div>
 
           {data.githubUrls && data.githubUrls.length > 0 && (
-            <div className="space-y-3 mt-3">
+            <div className="mt-3 space-y-3">
               {data.githubUrls.map((link, idx) => (
-                <div key={idx} className="flex gap-2 items-start">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 flex-1">
+                <div key={idx} className="flex items-start gap-2">
+                  <div className="grid flex-1 grid-cols-1 gap-2 md:grid-cols-2">
                     <input
-                      className="adm-input"
+                      className="input"
                       value={link.label}
                       onChange={(e) =>
                         handleUpdateGithubUrl(idx, "label", e.target.value)
                       }
                       placeholder="Label (e.g. Frontend)"
+                      aria-label={`Repository ${idx + 1} label`}
                       required
                     />
                     <input
-                      className="adm-input"
+                      className="input"
                       value={link.url}
                       onChange={(e) =>
                         handleUpdateGithubUrl(idx, "url", e.target.value)
                       }
                       placeholder="URL of the repository"
+                      aria-label={`Repository ${idx + 1} URL`}
                       required
                     />
                   </div>
                   <button
                     type="button"
                     onClick={() => handleRemoveGithubUrl(idx)}
-                    className="p-3 bg-red-500/10 text-red-400 rounded-md hover:bg-red-500/20 transition-colors border border-red-500/20 h-[42px]"
-                    title="Delete URL"
+                    className="btn-icon btn-icon-danger h-[2.875rem] w-[2.875rem]"
+                    aria-label="Delete repository"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               ))}
@@ -321,12 +288,10 @@ export function ProjectForm({
       )}
 
       <div>
-        <Label htmlFor="demoUrl" accent={accent}>
-          Live Demo URL
-        </Label>
+        <Label htmlFor="demoUrl">Live Demo URL</Label>
         <input
           id="demoUrl"
-          className="adm-input"
+          className="input"
           value={data.demoUrl}
           onChange={(e) => setData({ ...data, demoUrl: e.target.value })}
           placeholder="https://project-demo.vercel.app"

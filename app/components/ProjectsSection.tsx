@@ -1,11 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import { ArrowUpRight, X } from "lucide-react";
 import GithubSVG from "./svg/GithubSVG";
 import type { Project } from "@/types";
 import CollapsibleDescription from "./CollapsibleDescription";
-import { SquareArrowOutUpRight, X } from "lucide-react";
+
+type RepoLink = { label: string; url: string };
+
+function getRepoLinks(project: Project): RepoLink[] {
+  const raw = project.githubUrls as unknown;
+  if (Array.isArray(raw)) {
+    return raw
+      .filter((l) => l && typeof l.url === "string" && l.url)
+      .map((l) => ({ label: l.label || "Repository", url: l.url }));
+  }
+  if (raw && typeof raw === "object") {
+    return Object.entries(raw as Record<string, unknown>)
+      .filter(([, url]) => typeof url === "string" && url)
+      .map(([label, url]) => ({ label, url: url as string }));
+  }
+  return [];
+}
 
 interface ProjectsSectionProps {
   projects: Project[];
@@ -16,6 +32,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
     null,
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const openModal = (project: Project) => {
     setActiveProjectModal(project);
@@ -26,12 +43,13 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
     setIsModalVisible(false);
     setTimeout(() => {
       setActiveProjectModal(null);
-    }, 300);
+    }, 200);
   };
 
   useEffect(() => {
     if (activeProjectModal) {
       document.body.style.overflow = "hidden";
+      closeButtonRef.current?.focus();
     } else {
       document.body.style.overflow = "";
     }
@@ -40,198 +58,212 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
     };
   }, [activeProjectModal]);
 
+  useEffect(() => {
+    if (!activeProjectModal) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [activeProjectModal]);
+
+  const modalRepos = activeProjectModal ? getRepoLinks(activeProjectModal) : [];
+
   return (
-    <section
-      id="projects"
-      className="relative z-1 py-[100px] px-8 bg-[linear-gradient(180deg,transparent,rgba(79,142,247,0.03),transparent)]"
-    >
-      <div className="max-w-[1200px] mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <p className="text-secondary font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
-            // 02. PROJECTS
-          </p>
+    <section id="projects" aria-labelledby="projects-title" className="section">
+      <header className="section-head">
+        <h2 id="projects-title" className="h2">
+          <span className="h2-num">2</span>Projects
+        </h2>
+        <p className="lede">
+          Collection of high-performance web applications built with modern
+          technologies
+        </p>
+      </header>
 
-          <h2 className="section-title gradient-text-blue-purple">
-            Work Highlight
-          </h2>
+      {projects.length === 0 ? (
+        <p className="border border-dashed border-rule p-10 text-center text-sm text-ink-2">
+          No projects published yet.
+        </p>
+      ) : (
+        <ol className="border-t border-ink">
+          {projects.map((project, i) => {
+            const repos = getRepoLinks(project);
+            const figure = `2.${i + 1}`;
+            const hasLinks =
+              Boolean(project.demoUrl) ||
+              repos.length > 0 ||
+              Boolean(project.githubUrl);
 
-          <p className="section-subtitle">
-            Collection of high-performance web applications built with modern
-            technologies
-          </p>
-        </div>
-
-        {/* Projects grid */}
-        <div className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(340px,1fr))] items-start">
-          {projects.map((project, i) => (
-            <div
-              key={project.title}
-              className="project-card glass"
-              style={{ animationDelay: `${i * 0.1}s` }}
-            >
-              {/* Card banner */}
-              <div className="relative aspect-video overflow-hidden flex items-center justify-center">
-                {project.image ? (
-                  <>
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/20" />
-                  </>
-                ) : (
-                  <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-size-[20px_20px]" />
-                )}
-              </div>
-
-              {/* Card content */}
-              <div className="p-6">
-                <h3 className="text-[1.15rem] font-bold text-foreground mb-[0.6rem]">
-                  {project.title}
-                </h3>
-
-                <CollapsibleDescription
-                  text={project.description}
-                  maxChars={150}
-                />
-
-                {/* Tech stack */}
-                <div
-                  className="relative w-full overflow-hidden mb-5 group"
-                  style={{
-                    maskImage:
-                      "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
-                    WebkitMaskImage:
-                      "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
-                  }}
-                >
-                  <style jsx>{`
-                    @keyframes ticker-${i} {
-                      0% {
-                        transform: translateX(0);
-                      }
-                      100% {
-                        transform: translateX(-50%);
-                      }
-                    }
-                    .animate-ticker-${i} {
-                      animation: ticker-${i} 25s linear infinite;
-                      width: max-content;
-                    }
-                    .group:hover .animate-ticker-${i} {
-                      animation-play-state: paused;
-                    }
-                  `}</style>
-                  <div className={`flex animate-ticker-${i} gap-[6px]`}>
-                    {[
-                      ...project.techStack,
-                      ...project.techStack,
-                      ...project.techStack,
-                      ...project.techStack,
-                    ].map((t: string, idx: number) => (
-                      <span
-                        key={idx}
-                        className="tech-chip shrink-0 whitespace-nowrap"
-                      >
-                        {t}
-                      </span>
-                    ))}
+            return (
+              <li
+                key={project.id}
+                className="group grid gap-6 border-b border-rule py-10 lg:grid-cols-12 lg:gap-10 lg:py-14"
+              >
+                <figure className="lg:col-span-5">
+                  <div className="aspect-[16/10] overflow-hidden border border-ink bg-sheet transition-colors group-hover:border-signal-ink">
+                    {project.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={project.image}
+                        alt={`Screenshot of ${project.title}`}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="label grid h-full place-items-center">
+                        No image
+                      </div>
+                    )}
                   </div>
+                  <figcaption className="label mt-2 transition-colors group-hover:text-signal-ink">
+                    Fig. {figure} — {project.title}
+                  </figcaption>
+                </figure>
+
+                <div className="lg:col-span-7">
+                  <h3 className="font-stretch-[110%] text-2xl font-bold leading-tight tracking-[-0.01em]">
+                    {project.title}
+                  </h3>
+
+                  <CollapsibleDescription
+                    text={project.description}
+                    maxChars={150}
+                  />
+
+                  <dl className="mt-6 border-t border-rule">
+                    <div className="grid grid-cols-[5.5rem_1fr] gap-4 border-b border-rule py-3">
+                      <dt className="label pt-1">Stack</dt>
+                      <dd className="flex flex-wrap gap-2">
+                        {project.techStack.length > 0 ? (
+                          project.techStack.map((tech, idx) => (
+                            <span key={`${tech}-${idx}`} className="chip">
+                              {tech}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-sm text-ink-2">
+                            Not specified
+                          </span>
+                        )}
+                      </dd>
+                    </div>
+                    <div className="grid grid-cols-[5.5rem_1fr] gap-4 border-b border-rule py-3">
+                      <dt className="label pt-1">Links</dt>
+                      <dd className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
+                        {project.demoUrl && (
+                          <a
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="link inline-flex items-center gap-1"
+                          >
+                            Live demo{" "}
+                            <ArrowUpRight size={14} aria-hidden="true" />
+                          </a>
+                        )}
+
+                        {repos.length > 1 ? (
+                          <button
+                            type="button"
+                            onClick={() => openModal(project)}
+                            className="link inline-flex items-center gap-2"
+                          >
+                            <GithubSVG width={14} height={14} />
+                            Repositories ({repos.length})
+                          </button>
+                        ) : repos.length === 1 ? (
+                          <a
+                            href={repos[0].url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="link inline-flex items-center gap-2"
+                          >
+                            <GithubSVG width={14} height={14} />
+                            {repos[0].label}
+                          </a>
+                        ) : project.githubUrl ? (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="link inline-flex items-center gap-2"
+                          >
+                            <GithubSVG width={14} height={14} />
+                            GitHub
+                          </a>
+                        ) : null}
+
+                        {!hasLinks && (
+                          <span className="text-ink-2">Private project</span>
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
                 </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
 
-                {/* Action buttons */}
-                <div className="flex flex-wrap gap-3 mt-auto">
-                  {project.demoUrl && (
-                    <Link
-                      href={project.demoUrl}
-                      target="_blank"
-                      className="btn-primary no-underline text-[0.85rem] px-[18px] py-[9px] flex-1 text-center min-w-[120px]"
-                    >
-                      Live Demo
-                    </Link>
-                  )}
-
-                  {project.githubUrls && project.githubUrls.length > 0 ? (
-                    <button
-                      onClick={() => openModal(project)}
-                      className="btn-secondary flex items-center justify-center gap-2 text-xs px-[14px] py-[9px]"
-                      title="Ver Repositorios"
-                    >
-                      <GithubSVG width={14} height={14} />
-                      Repositories
-                    </button>
-                  ) : project.githubUrl ? (
-                    <Link
-                      href={project.githubUrl}
-                      target="_blank"
-                      className="btn-secondary flex items-center justify-center gap-2 text-xs px-[14px] py-[9px]"
-                      title="Repositorio Principal"
-                    >
-                      <GithubSVG width={14} height={14} />
-                      GitHub
-                    </Link>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Modal for Multiple Repos */}
       {activeProjectModal && (
         <div
-          className={`fixed inset-0 z-50 flex items-center justify-center px-4 transition-all duration-300 ${
-            isModalVisible
-              ? "bg-black/60 backdrop-blur-sm opacity-100"
-              : "bg-black/0 backdrop-blur-none opacity-0"
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4 transition-opacity duration-200 ${
+            isModalVisible ? "opacity-100" : "opacity-0"
           }`}
           onClick={closeModal}
         >
           <div
-            className={`glass max-w-sm w-full p-6 relative transition-all duration-300 transform ${
-              isModalVisible
-                ? "scale-100 translate-y-0 opacity-100"
-                : "scale-95 translate-y-4 opacity-0"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="repos-title"
+            className={`w-full max-w-sm border border-ink bg-sheet p-6 shadow-sheet transition-transform duration-200 ${
+              isModalVisible ? "translate-y-0" : "translate-y-2"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-            >
-              <X size={20} />
-            </button>
+            <div className="flex items-start justify-between gap-4">
+              <h3 id="repos-title" className="text-lg font-bold">
+                Repositories
+              </h3>
+              <button
+                ref={closeButtonRef}
+                type="button"
+                onClick={closeModal}
+                aria-label="Close"
+                className="btn-icon"
+              >
+                <X size={18} />
+              </button>
+            </div>
 
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <GithubSVG width={20} height={20} />
-              Repositories
-            </h3>
-            <p className="text-gray-400 text-sm mb-6">
-              The project{" "}
-              <span className="text-white font-semibold">
+            <p className="mt-2 text-sm text-ink-2">
+              <span className="font-medium text-ink">
                 {activeProjectModal.title}
               </span>{" "}
-              is divided into the following repositories:
+              is split into the following repositories:
             </p>
 
-            <div className="space-y-3">
-              {activeProjectModal.githubUrls?.map((link, idx) => (
-                <Link
-                  key={idx}
-                  href={link.url}
-                  target="_blank"
-                  className="flex justify-between items-center bg-white/5 hover:bg-white/10 p-3 rounded-lg border border-white/10 transition-colors group"
-                >
-                  <span className="font-medium text-sm text-[#00f2ff]">
-                    {link.label}
-                  </span>
-                  <SquareArrowOutUpRight size={16} />
-                </Link>
+            <ul className="mt-5 border-t border-rule">
+              {modalRepos.map((link, idx) => (
+                <li key={`${link.url}-${idx}`} className="border-b border-rule">
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-3 py-3 text-sm font-medium transition-colors hover:text-signal-ink"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <GithubSVG width={16} height={16} />
+                      {link.label}
+                    </span>
+                    <ArrowUpRight size={16} aria-hidden="true" />
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       )}

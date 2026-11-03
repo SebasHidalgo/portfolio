@@ -12,8 +12,6 @@ import {
   deleteEducation,
 } from "@/lib/database/tables/education";
 
-const accent = "#ffb703";
-
 export default function EducationClient({
   initialEducations,
 }: {
@@ -65,10 +63,9 @@ export default function EducationClient({
       <Header
         title="Education"
         count={educations.length}
-        accent={accent}
         showForm={showForm}
         toggleForm={() => (showForm ? reset() : setShowForm(true))}
-        addLabel={"Add Education"}
+        addLabel="Add Education"
       />
 
       {showForm && (
@@ -76,18 +73,13 @@ export default function EducationClient({
           editingItem={editingItem}
           onSubmit={handleSubmit}
           isPending={createMut.isPending || updateMut.isPending}
-          accent={accent}
         />
       )}
 
       {educations.length === 0 ? (
-        <EmptyState
-          accent={accent}
-          label="Education"
-          onClick={() => setShowForm(true)}
-        />
+        <EmptyState label="Education" onClick={() => setShowForm(true)} />
       ) : (
-        <div className="grid gap-6 grid-cols-1 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
           {educations.map((edu) => (
             <Card
               key={edu.id}
@@ -97,14 +89,13 @@ export default function EducationClient({
                 setShowForm(true);
               }}
               onDelete={() => handleDelete(edu.id)}
-              accent={accent}
             >
-              <p className="text-sm text-gray-400 mb-2">
-                {edu.institution} • {edu.ubication}
+              <p className="mb-2 text-sm text-ink-2">
+                {edu.institution} · {edu.ubication}
               </p>
 
-              <p className="text-xs text-gray-500">
-                {new Date(edu.startDate).toLocaleDateString()} -{" "}
+              <p className="font-mono text-xs text-ink-2">
+                {new Date(edu.startDate).toLocaleDateString()} –{" "}
                 {new Date(edu.endDate).toLocaleDateString()}
               </p>
             </Card>

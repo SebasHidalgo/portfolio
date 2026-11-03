@@ -8,14 +8,6 @@ const CATEGORIES: SkillCategory[] = [
   "DevOps & Tools",
 ];
 
-const CATEGORY_COLOR: Record<SkillCategory, string> = {
-  Languages: "#4f8ef7",
-  Frontend: "#ffb703",
-  Backend: "#a855f7",
-  Database: "#22d3ee",
-  "DevOps & Tools": "#bc13fe",
-};
-
 type Props = {
   activeTab: SkillCategory;
   setActiveTab: (tab: SkillCategory) => void;
@@ -23,22 +15,26 @@ type Props = {
 
 export function SkillsTabs({ activeTab, setActiveTab }: Props) {
   return (
-    <div className="flex flex-wrap gap-2 mb-6">
+    <div
+      role="tablist"
+      aria-label="Skill categories"
+      className="mb-6 flex flex-wrap border-b border-rule"
+    >
       {CATEGORIES.map((tab) => {
         const isActive = activeTab === tab;
-        const color = CATEGORY_COLOR[tab];
 
         return (
           <button
             key={tab}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
             onClick={() => setActiveTab(tab)}
-            className="px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] border transition-all duration-200"
-            style={{
-              borderColor: isActive ? color : "rgba(255,255,255,0.1)",
-              background: isActive ? `${color}20` : "transparent",
-              color: isActive ? color : "rgba(255,255,255,0.45)",
-              boxShadow: isActive ? `0 0 12px ${color}40` : "none",
-            }}
+            className={`-mb-px border-b-2 px-4 py-2.5 text-[0.6875rem] font-bold uppercase tracking-[0.1em] transition-colors ${
+              isActive
+                ? "border-ink text-ink"
+                : "border-transparent text-ink-2 hover:text-ink"
+            }`}
           >
             {tab}
           </button>

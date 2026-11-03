@@ -1,181 +1,107 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import type { Skill } from "@/types";
-import Link from "next/link";
 import { Download } from "lucide-react";
+import type { Skill, SkillCategory } from "@/types";
+import { PROFILE } from "@/lib/profile";
 
-const traits = [
-  { icon: "🧩", title: "Problem Solver", desc: "Logical & Creative" },
-  { icon: "🚀", title: "Tech Enthusiast", desc: "Latest technologies" },
-  { icon: "📚", title: "Continuous Learner", desc: "Growth mindset" },
-  { icon: "🤝", title: "Team Player", desc: "Collaboration first" },
+const CATEGORY_ORDER: SkillCategory[] = [
+  "Languages",
+  "Frontend",
+  "Backend",
+  "Database",
+  "DevOps & Tools",
 ];
 
-const CHIP_COLORS = ["#4f8ef7", "#a855f7", "#22d3ee"];
+function groupSkills(skills: Skill[]) {
+  const groups = new Map<string, Skill[]>();
+  for (const skill of skills) {
+    const list = groups.get(skill.category) ?? [];
+    list.push(skill);
+    groups.set(skill.category, list);
+  }
+  const ordered = [...CATEGORY_ORDER, ...groups.keys()].filter(
+    (c, i, arr) => groups.has(c) && arr.indexOf(c) === i,
+  );
+  return ordered.map((category) => ({
+    category,
+    items: groups.get(category) ?? [],
+  }));
+}
 
 interface AboutSectionProps {
   skills: Skill[];
 }
 
 export default function AboutSection({ skills }: AboutSectionProps) {
-  const [visible, setVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const resumeURL = process.env.NEXT_PUBLIC_RESUME_URL!;
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.1 },
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const groups = groupSkills(skills);
 
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className="relative z-1 py-[100px] px-8 max-md:py-[60px]"
-    >
-      <div className="max-w-[1200px] mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <p className="text-primary font-mono text-[0.85rem] mb-3 tracking-[0.2em]">
-            // 01. ABOUT ME
+    <section id="about" aria-labelledby="about-title" className="section">
+      <header className="section-head">
+        <h2 id="about-title" className="h2">
+          <span className="h2-num">1</span>Profile
+        </h2>
+        <p className="lede">
+          Passionate developer creating extraordinary digital experiences
+        </p>
+      </header>
+
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
+        <div className="max-w-[60ch] lg:col-span-5">
+          <h3 className="text-xl font-bold leading-snug">
+            A story of code and creativity
+          </h3>
+
+          <p className="mt-4 leading-[1.7] text-ink-2">
+            I am a Full Stack developer passionate about building beautiful
+            interfaces and robust backends. With an eye for design and a love
+            for clean code, I turn complex problems into elegant solutions.
           </p>
-          <h2 className="section-title gradient-text-blue-purple">
-            Get to Know Me Better
-          </h2>
-          <p className="section-subtitle">
-            Passionate developer creating extraordinary digital experiences
+
+          <p className="mt-4 leading-[1.7] text-ink-2">
+            My journey involves constant learning and pushing the boundaries of
+            modern web technology. When I&apos;m not programming, I&apos;m
+            exploring trends in UI/UX, contributing to open source, or just
+            relaxing.
           </p>
+
+          {PROFILE.resumeUrl && (
+            <a
+              href={PROFILE.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary mt-8"
+            >
+              <Download size={16} aria-hidden="true" />
+              Download résumé
+            </a>
+          )}
         </div>
 
-        {/* Main grid */}
-        <div className="grid grid-cols-2 gap-16 items-start max-md:grid-cols-1 about-grid">
-          {/* Left - Avatar and traits */}
-          <div
-            className={`
-          flex flex-col items-center gap-8
-          transition-all duration-800 ease
-          ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}
-        `}
-          >
-            {/* Avatar */}
-            <div className="relative">
-              <div className="w-[220px] h-[220px] rounded-full p-[3px] animate-spin-slow bg-linear-to-br from-primary via-secondary to-accent">
-                <div className="w-full h-full rounded-full bg-background flex items-center justify-center text-[5rem]">
-                  👨‍💻
-                </div>
-              </div>
+        <div className="lg:col-span-7">
+          <h3 className="text-base font-semibold">Technical skills</h3>
 
-              {/* Floating badges */}
-              <div className="glass absolute -top-[10px] -right-[20px] px-[14px] py-[8px] rounded-full text-[0.8rem] font-semibold text-primary whitespace-nowrap animate-float">
-                ⚡ React Expert
-              </div>
-              <div className="glass absolute bottom-0 -left-[30px] px-[14px] py-[8px] rounded-full text-[0.8rem] font-semibold text-secondary whitespace-nowrap animate-float [animation-delay:1s]">
-                🔗 Open Source
-              </div>
-            </div>
-
-            {/* Traits */}
-            <div className="grid grid-cols-2 gap-4 w-full">
-              {traits.map((t, i) => (
+          {groups.length === 0 ? (
+            <p className="mt-4 border border-dashed border-rule p-6 text-sm text-ink-2">
+              No skills published yet.
+            </p>
+          ) : (
+            <dl className="mt-4 border-t border-ink">
+              {groups.map((group) => (
                 <div
-                  key={i}
-                  className="
-                glass p-4 rounded-xl text-center
-                transition-all duration-300
-                hover:-translate-y-1
-                hover:border-primary/30
-                cursor-default
-              "
+                  key={group.category}
+                  className="grid gap-2 border-b border-rule py-4 sm:grid-cols-[9rem_1fr] sm:gap-4"
                 >
-                  <div className="text-[1.5rem] mb-1">{t.icon}</div>
-                  <div className="text-[0.85rem] font-semibold text-foreground mb-[2px]">
-                    {t.title}
-                  </div>
-                  <div className="text-[0.75rem] text-subtle">{t.desc}</div>
+                  <dt className="label pt-1">{group.category}</dt>
+                  <dd className="flex flex-wrap gap-2">
+                    {group.items.map((skill) => (
+                      <span key={skill.id} className="chip">
+                        {skill.name}
+                      </span>
+                    ))}
+                  </dd>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* Right - Bio and skills */}
-          <div
-            className={`
-          transition-all duration-800ms ease delay-200ms
-          ${visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}
-        `}
-          >
-            <h3 className="text-[1.5rem] font-bold mb-4 text-foreground">
-              A story of{" "}
-              <span className="gradient-text">code and creativity</span>
-            </h3>
-
-            <p className="text-muted leading-[1.9] mb-5 text-[0.95rem]">
-              I am a Full Stack developer passionate about building beautiful
-              interfaces and robust backends. With an eye for design and a love
-              for clean code, I turn complex problems into elegant solutions.
-            </p>
-
-            <p className="text-muted leading-[1.9] mb-8 text-[0.95rem]">
-              My journey involves constant learning and pushing the boundaries
-              of modern web technology. When I'm not programming, I'm exploring
-              trends in UI/UX, contributing to open source, or just relaxing.
-            </p>
-
-            {/* Skills */}
-            <h4 className="text-[1rem] font-semibold mb-5 text-foreground">
-              Technical Skills
-            </h4>
-
-            <div className="flex flex-wrap gap-3">
-              {skills.map((skill, i) => {
-                const color = CHIP_COLORS[i % CHIP_COLORS.length];
-                return (
-                  <span
-                    key={skill.id}
-                    className="px-4 py-2 rounded-full text-[0.8rem] font-mono font-medium border transition-all duration-300 hover:-translate-y-0.5 cursor-default"
-                    style={{
-                      background: `${color}12`,
-                      borderColor: `${color}30`,
-                      color,
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLSpanElement).style.boxShadow =
-                        `0 0 14px ${color}33`;
-                      (e.currentTarget as HTMLSpanElement).style.borderColor =
-                        `${color}60`;
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLSpanElement).style.boxShadow =
-                        "none";
-                      (e.currentTarget as HTMLSpanElement).style.borderColor =
-                        `${color}30`;
-                    }}
-                  >
-                    {skill.name}
-                  </span>
-                );
-              })}
-            </div>
-
-            {/* Download CV */}
-            <div className="mt-8">
-              <Link
-                target="_blank"
-                href={resumeURL}
-                className="btn-primary inline-flex items-center gap-2 no-underline"
-              >
-                <Download size={16} />
-                Download Resume
-              </Link>
-            </div>
-          </div>
+            </dl>
+          )}
         </div>
       </div>
     </section>

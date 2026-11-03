@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Archivo, B612_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import CustomCursor from "./components/CustomCursor";
 import { Toaster } from "react-hot-toast";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
+  display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const b612Mono = B612_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "700"],
+  variable: "--font-b612-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Guillermo H. | Portfolio",
+  title: "Guillermo Hidalgo | Full Stack Developer",
   description:
-    "Full Stack Developer passionate about building futuristic interfaces and robust backends. Specializing in React, Next.js, Node.js, and modern web technologies.",
+    "Full Stack Developer based in San José, Costa Rica. Projects, experience and skills in React, Next.js, Node.js, TypeScript and PostgreSQL.",
   keywords: [
     "Full Stack Developer",
     "React",
@@ -29,10 +30,11 @@ export const metadata: Metadata = {
     "TypeScript",
     "Portfolio",
   ],
-  authors: [{ name: "Guillermo H." }],
+  authors: [{ name: "Guillermo Hidalgo" }],
   openGraph: {
-    title: "Guillermo H. | Full Stack Developer",
-    description: "Building the future, one line of code at a time.",
+    title: "Guillermo Hidalgo | Full Stack Developer",
+    description:
+      "Projects, experience and skills of a Full Stack Developer based in Costa Rica.",
     type: "website",
   },
 };
@@ -44,13 +46,33 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="es">
-        <body
-          className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
-        >
-          <CustomCursor />
+      <html lang="en" className={`${archivo.variable} ${b612Mono.variable}`}>
+        <body className="min-h-dvh">
           {children}
-          <Toaster position="top-right" />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: "var(--color-ink)",
+                color: "var(--color-paper)",
+                borderRadius: 0,
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.875rem",
+              },
+              success: {
+                iconTheme: {
+                  primary: "var(--color-ok)",
+                  secondary: "var(--color-paper)",
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: "var(--color-signal)",
+                  secondary: "var(--color-paper)",
+                },
+              },
+            }}
+          />
         </body>
       </html>
     </ClerkProvider>
