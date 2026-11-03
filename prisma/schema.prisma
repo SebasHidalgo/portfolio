@@ -3,21 +3,22 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  image       String
-  techStack   String[]
-  demoUrl     String?
-  githubUrl   String?
-  githubUrls  Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  image        String
+  techStack    String[]
+  demoUrl      String?
+  githubUrl    String?
+  githubUrls   Json?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Experience {
@@ -25,7 +26,6 @@ model Experience {
   company      String
   position     String
   ubication    String
-  color        String
   achievements String[]
   startDate    DateTime
   endDate      DateTime

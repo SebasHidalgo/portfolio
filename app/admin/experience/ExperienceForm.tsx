@@ -10,7 +10,6 @@ type Props = {
     company: string;
     position: string;
     ubication: string;
-    color: string;
     achievements: string[];
     startDate: Date;
     endDate: Date;
@@ -22,7 +21,6 @@ const EMPTY = {
   company: "",
   position: "",
   ubication: "",
-  color: "#c4330a",
   achievements: "",
   startDate: "",
   endDate: "",
@@ -37,7 +35,6 @@ export function ExperienceForm({ editingItem, onSubmit, isPending }: Props) {
         company: editingItem.company,
         position: editingItem.position,
         ubication: editingItem.ubication,
-        color: editingItem.color,
         achievements: editingItem.achievements.join("\n"),
         startDate: new Date(editingItem.startDate).toISOString().slice(0, 10),
         endDate: new Date(editingItem.endDate).toISOString().slice(0, 10),
@@ -54,7 +51,6 @@ export function ExperienceForm({ editingItem, onSubmit, isPending }: Props) {
       company: data.company,
       position: data.position,
       ubication: data.ubication,
-      color: data.color,
       achievements: data.achievements.split("\n").filter(Boolean),
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
@@ -92,7 +88,7 @@ export function ExperienceForm({ editingItem, onSubmit, isPending }: Props) {
         />
       </div>
 
-      <div>
+      <div className="md:col-span-2">
         <Label htmlFor="ubication">Location *</Label>
         <input
           id="ubication"
@@ -101,17 +97,6 @@ export function ExperienceForm({ editingItem, onSubmit, isPending }: Props) {
           onChange={(e) => setData({ ...data, ubication: e.target.value })}
           required
           placeholder="e.g. Remote • New York, US"
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="color">Color Tag</Label>
-        <input
-          id="color"
-          type="color"
-          className="input"
-          value={data.color}
-          onChange={(e) => setData({ ...data, color: e.target.value })}
         />
       </div>
 

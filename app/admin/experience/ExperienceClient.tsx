@@ -43,7 +43,6 @@ export default function ExperienceClient({
     company: string;
     position: string;
     ubication: string;
-    color: string;
     achievements: string[];
     startDate: Date;
     endDate: Date;
@@ -98,12 +97,7 @@ export default function ExperienceClient({
               }}
               onDelete={() => handleDelete(exp.id)}
             >
-              <p className="mb-2 flex items-center gap-2 text-sm text-ink-2">
-                <span
-                  aria-hidden="true"
-                  className="size-2.5 shrink-0 border border-ink/20"
-                  style={{ background: exp.color }}
-                />
+              <p className="mb-2 text-sm text-ink-2">
                 {exp.company} · {exp.ubication}
               </p>
 

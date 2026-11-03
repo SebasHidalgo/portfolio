@@ -7,12 +7,22 @@ import { Project } from '@/types'
 
 export async function getProjects(): Promise<Project[]> {
     const projects = await prisma.project.findMany({
-        orderBy: { createdAt: 'desc' }
+        orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }, { id: 'asc' }]
     })
     return projects as any;
 }
 
-export async function createProject(data: { title: string, description: string, image: string, techStack: string[], demoUrl?: string, githubUrl?: string, githubUrls?: any }) {
+export async function reorderProjects(orderedIds: string[]) {
+    await prisma.$transaction(
+        orderedIds.map((id, index) =>
+            prisma.project.update({ where: { id }, data: { displayOrder: index + 1 } })
+        )
+    )
+    revalidatePath('/admin/projects')
+    revalidatePath('/')
+}
+
+export async function createProject(data: { title: string, description: string, image: string, techStack: string[], demoUrl?: string, githubUrl?: string, githubUrls?: any, displayOrder?: number }) {
     const project = await prisma.project.create({ data })
     revalidatePath('/admin/projects')
     revalidatePath('/')

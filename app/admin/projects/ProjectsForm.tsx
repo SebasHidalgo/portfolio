@@ -17,6 +17,7 @@ type Props = {
     demoUrl?: string;
     githubUrl?: string;
     githubUrls?: { label: string; url: string }[];
+    displayOrder: number;
   }) => void;
   isPending: boolean;
 };
@@ -29,6 +30,7 @@ const EMPTY = {
   demoUrl: "",
   githubUrl: "",
   githubUrls: [] as { label: string; url: string }[],
+  displayOrder: "0",
 };
 
 export function ProjectForm({ editingItem, onSubmit, isPending }: Props) {
@@ -75,6 +77,7 @@ export function ProjectForm({ editingItem, onSubmit, isPending }: Props) {
         demoUrl: editingItem.demoUrl || "",
         githubUrl: editingItem.githubUrl || "",
         githubUrls: urlsArray,
+        displayOrder: String(editingItem.displayOrder ?? 0),
       });
       setHasMultipleRepos(urlsArray.length > 0);
       setSelectedFile(null);
@@ -122,6 +125,7 @@ export function ProjectForm({ editingItem, onSubmit, isPending }: Props) {
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
+      displayOrder: Math.max(0, Number.parseInt(data.displayOrder, 10) || 0),
     });
   };
 
@@ -296,6 +300,25 @@ export function ProjectForm({ editingItem, onSubmit, isPending }: Props) {
           onChange={(e) => setData({ ...data, demoUrl: e.target.value })}
           placeholder="https://project-demo.vercel.app"
         />
+      </div>
+
+      <div>
+        <Label htmlFor="displayOrder">Display Order</Label>
+        <input
+          id="displayOrder"
+          type="number"
+          inputMode="numeric"
+          min={0}
+          step={1}
+          className="input"
+          value={data.displayOrder}
+          onChange={(e) => setData({ ...data, displayOrder: e.target.value })}
+          aria-describedby="displayOrder-hint"
+        />
+        <p id="displayOrder-hint" className="mt-2 text-xs text-ink-2">
+          Lower numbers appear first. Projects with the same number show
+          newest first.
+        </p>
       </div>
     </FormLayout>
   );

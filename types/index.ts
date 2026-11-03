@@ -7,6 +7,7 @@ export type Project = {
     demoUrl: string | null;
     githubUrl: string | null;
     githubUrls?: { label: string; url: string }[] | null;
+    displayOrder: number;
 };
 
 export type Experience = {
@@ -14,7 +15,6 @@ export type Experience = {
     company: string;
     position: string;
     ubication: string;
-    color: string;
     achievements: string[];
     startDate: Date;
     endDate: Date;

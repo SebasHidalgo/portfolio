@@ -70,7 +70,6 @@ async function main() {
         company: 'Innovate Solutions',
         position: 'Frontend Developer',
         ubication: 'Remote',
-        color: '#3b82f6',
         achievements: [
           'Developed responsive user interfaces with React and Tailwind CSS.',
           'Improved web performance by 30% with code splitting and lazy loading.',
@@ -83,7 +82,6 @@ async function main() {
         company: 'Tech Agency Hub',
         position: 'Full Stack Developer',
         ubication: 'Madrid, Spain',
-        color: '#10b981',
         achievements: [
           'Built REST APIs using Node.js and Express.',
           'Managed relational databases with PostgreSQL.',
@@ -96,7 +94,6 @@ async function main() {
         company: 'Digital Startup Labs',
         position: 'Backend Developer',
         ubication: 'Remote',
-        color: '#f59e0b',
         achievements: [
           'Designed scalable backend services using NestJS.',
           'Implemented authentication and role-based access control.',
@@ -109,7 +106,6 @@ async function main() {
         company: 'Freelance',
         position: 'Full Stack Developer',
         ubication: 'Remote',
-        color: '#8b5cf6',
         achievements: [
           'Developed custom web applications for small businesses.',
           'Built e-commerce solutions with Stripe payments.',
@@ -128,6 +124,7 @@ async function main() {
     data: [
       {
         title: 'E-commerce Platform',
+        displayOrder: 1,
         description:
           'Full stack e-commerce platform with product management, payments, and admin dashboard.',
         image:
@@ -148,6 +145,7 @@ async function main() {
       },
       {
         title: 'Task Tracker App',
+        displayOrder: 2,
         description:
           'Progressive web app for task management with offline support and notifications.',
         image:
@@ -158,6 +156,7 @@ async function main() {
       },
       {
         title: 'AI Resume Analyzer',
+        displayOrder: 3,
         description:
           'AI powered resume analyzer that evaluates resumes and provides structured feedback.',
         image:
@@ -168,6 +167,7 @@ async function main() {
       },
       {
         title: 'Portfolio Website',
+        displayOrder: 4,
         description:
           'Modern developer portfolio built with Next.js, featuring admin dashboard and dynamic content.',
         image:
@@ -178,6 +178,7 @@ async function main() {
       },
       {
         title: 'SaaS Analytics Dashboard',
+        displayOrder: 5,
         description:
           'Analytics dashboard for SaaS platforms showing user metrics, revenue charts, and usage insights.',
         image:

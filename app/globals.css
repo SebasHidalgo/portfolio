@@ -264,8 +264,13 @@
       color 0.2s;
   }
 
-  .btn-icon:hover {
+  .btn-icon:hover:not(:disabled) {
     border-color: var(--color-ink);
+  }
+
+  .btn-icon:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 
   .btn-icon-danger {
@@ -356,12 +361,6 @@
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    cursor: pointer;
-  }
-
-  input[type="color"].input {
-    padding: 0.25rem;
-    height: 2.875rem;
     cursor: pointer;
   }
 

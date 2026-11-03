@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ArrowDown, ArrowUp } from "lucide-react";
+import toast from "react-hot-toast";
 import { Project } from "@/types";
 import { EmptyState, Header, Card } from "@/app/admin/components";
 import { useCrud } from "@/app/admin/hooks/useCrud";
@@ -10,6 +13,7 @@ import {
   createProject,
   updateProject,
   deleteProject,
+  reorderProjects,
 } from "@/lib/database/tables/project";
 import { deleteFile } from "@/lib/supabase/helpers";
 
@@ -40,6 +44,21 @@ export default function ProjectsClient({
     },
   });
 
+  const queryClient = useQueryClient();
+  const reorderMut = useMutation({
+    mutationFn: reorderProjects,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["projects"] }),
+    onError: () => toast.error("Could not reorder projects"),
+  });
+
+  const moveProject = (index: number, offset: -1 | 1) => {
+    const target = index + offset;
+    if (target < 0 || target >= projects.length) return;
+    const ids = projects.map((p) => p.id);
+    [ids[index], ids[target]] = [ids[target], ids[index]];
+    reorderMut.mutate(ids);
+  };
+
   const handleSubmit = (data: {
     title: string;
     description: string;
@@ -48,6 +67,7 @@ export default function ProjectsClient({
     demoUrl?: string;
     githubUrl?: string;
     githubUrls?: { label: string; url: string }[];
+    displayOrder: number;
   }) => {
     if (editingItem) {
       updateMut.mutate({ id: editingItem.id, data });
@@ -96,7 +116,7 @@ export default function ProjectsClient({
         <EmptyState label="Project" onClick={() => setShowForm(true)} />
       ) : (
         <div className="grid gap-5 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <Card
               key={project.id}
               title={project.title}
@@ -128,6 +148,32 @@ export default function ProjectsClient({
                     {tech}
                   </span>
                 ))}
+              </div>
+
+              <div className="mt-4 flex items-center justify-between border-t border-rule pt-4">
+                <span className="label">Order {project.displayOrder}</span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => moveProject(index, -1)}
+                    disabled={index === 0 || reorderMut.isPending}
+                    aria-label={`Move ${project.title} up`}
+                    className="btn-icon"
+                  >
+                    <ArrowUp size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveProject(index, 1)}
+                    disabled={
+                      index === projects.length - 1 || reorderMut.isPending
+                    }
+                    aria-label={`Move ${project.title} down`}
+                    className="btn-icon"
+                  >
+                    <ArrowDown size={16} />
+                  </button>
+                </div>
               </div>
             </Card>
           ))}

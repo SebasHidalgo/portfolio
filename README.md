@@ -111,14 +111,14 @@ docker-compose up -d
 
 ### 5. Setup the Database
 
-Generate the Prisma client, apply the schema, and seed the mock data:
+Generate the Prisma client, apply the migrations, and seed the mock data:
 
 ```bash
 # Generate the Prisma client
 npx prisma generate
 
-# Apply the schema to your database
-npx prisma db push
+# Apply the migrations in prisma/migrations to your database
+npx prisma migrate deploy
 
 # Seed the initial mock data
 npm run seed

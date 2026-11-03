@@ -9,7 +9,7 @@ export async function getExperiences() {
     })
 }
 
-export async function createExperience(data: { company: string, position: string, ubication: string, color: string, achievements: string[], startDate: Date, endDate: Date }) {
+export async function createExperience(data: { company: string, position: string, ubication: string, achievements: string[], startDate: Date, endDate: Date }) {
     const experience = await prisma.experience.create({ data })
     revalidatePath('/admin/experience')
     revalidatePath('/')

@@ -65,14 +65,7 @@ export default function ExperienceSection({
                 <h3 className="text-xl font-bold leading-snug">
                   {exp.position}
                 </h3>
-                <p className="mt-1 flex items-center gap-2 font-medium">
-                  <span
-                    aria-hidden="true"
-                    className="size-2.5 shrink-0 border border-ink/20"
-                    style={{ background: exp.color || "var(--color-rule)" }}
-                  />
-                  {exp.company}
-                </p>
+                <p className="mt-1 font-medium">{exp.company}</p>
 
                 {exp.achievements.length > 0 && (
                   <ul className="marks mt-4 max-w-[65ch] space-y-2 text-[0.9375rem] leading-[1.6] text-ink-2">
