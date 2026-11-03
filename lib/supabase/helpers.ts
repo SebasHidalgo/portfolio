@@ -1,29 +1,26 @@
 import toast from "react-hot-toast";
 import { supabaseClient } from "./supabaseClient";
+import { createProjectImageUpload, deleteProjectImage } from "./storage";
+import { PROJECT_IMAGES_BUCKET, validateImage } from "./imageRules";
 
-export const deleteFile = (oldFileName: string) => {
-    supabaseClient.storage
-        .from("projects")
-        .remove([oldFileName])
-        .catch((err: unknown) =>
-            console.error("Error deleting image:", err),
-        );
-};
+export async function uploadProjectImage(file: File): Promise<string> {
+    const invalid = validateImage(file);
+    if (invalid) throw new Error(invalid);
 
-export const uploadFile = async (selectedFile: File) => {
-    const fileExt = selectedFile.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
+    const ticket = await createProjectImageUpload({ type: file.type, size: file.size });
+    if (!ticket.ok) throw new Error(ticket.error);
 
-    const { data: uploadData, error } = await supabaseClient.storage
-        .from("projects")
-        .upload(fileName, selectedFile);
+    const { error } = await supabaseClient.storage
+        .from(PROJECT_IMAGES_BUCKET)
+        .uploadToSignedUrl(ticket.path, ticket.token, file, { contentType: file.type });
+    if (error) throw new Error("Error uploading image");
 
-    if (error) {
-        toast.error("Error uploading image");
-        return;
-    }
+    return ticket.publicUrl;
+}
 
-    const { data: { publicUrl } } = supabaseClient.storage.from("projects").getPublicUrl(uploadData.path);
-
-    return publicUrl;
-}   
+export function removeProjectImage(imageUrl: string) {
+    deleteProjectImage(imageUrl).catch((err: unknown) => {
+        console.error("Error deleting image:", err);
+        toast.error("The image could not be removed from storage");
+    });
+}

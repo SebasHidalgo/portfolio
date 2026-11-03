@@ -5,7 +5,12 @@ import { Project } from "@/types";
 import { FormLayout, Label } from "@/app/admin/components";
 import toast from "react-hot-toast";
 import { Plus, Trash2 } from "lucide-react";
-import { deleteFile, uploadFile } from "@/lib/supabase/helpers";
+import { uploadProjectImage } from "@/lib/supabase/helpers";
+import {
+  ACCEPTED_IMAGE_TYPES,
+  IMAGE_RULES_HINT,
+  validateImage,
+} from "@/lib/supabase/imageRules";
 
 type Props = {
   editingItem: Project | null;
@@ -95,22 +100,21 @@ export function ProjectForm({ editingItem, onSubmit, isPending }: Props) {
 
     if (selectedFile) {
       setIsUploading(true);
-
-      const uploadedFile = await uploadFile(selectedFile);
-      imageUrl = uploadedFile!;
-
-      setIsUploading(false);
-
-      if (editingItem && editingItem.image) {
-        const oldFileName = editingItem.image.split("/").pop();
-
-        if (oldFileName) {
-          deleteFile(oldFileName);
-        }
-      } else if (!imageUrl) {
-        toast.error("Please upload an image");
+      try {
+        imageUrl = await uploadProjectImage(selectedFile);
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Error uploading image",
+        );
         return;
+      } finally {
+        setIsUploading(false);
       }
+    }
+
+    if (!imageUrl) {
+      toast.error("Please upload an image");
+      return;
     }
 
     onSubmit({
@@ -168,22 +172,30 @@ export function ProjectForm({ editingItem, onSubmit, isPending }: Props) {
             <input
               id="image"
               type="file"
-              accept="image/*"
+              accept={ACCEPTED_IMAGE_TYPES}
               className="input cursor-pointer"
+              aria-describedby="image-hint"
               onChange={(e) => {
-                if (e.target.files && e.target.files.length > 0) {
-                  setSelectedFile(e.target.files[0]);
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const invalid = validateImage(file);
+                if (invalid) {
+                  toast.error(invalid);
+                  e.target.value = "";
+                  setSelectedFile(null);
+                  return;
                 }
+                setSelectedFile(file);
               }}
               required={!editingItem && !data.image}
             />
-            {(data.image || selectedFile) && (
-              <p className="mt-2 text-xs text-ink-2">
-                {selectedFile
-                  ? `Selected: ${selectedFile.name}`
-                  : "(Current image saved)"}
-              </p>
-            )}
+            <p id="image-hint" className="mt-2 text-xs text-ink-2">
+              {selectedFile
+                ? `Selected: ${selectedFile.name}`
+                : data.image
+                  ? "(Current image saved)"
+                  : IMAGE_RULES_HINT}
+            </p>
           </div>
           {(selectedFile || data.image) && (
             <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden border border-rule bg-paper">

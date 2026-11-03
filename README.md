@@ -75,7 +75,7 @@ npm install
 
 ### 3. Set up environment variables
 
-Create a `.env` file in the root directory and add all the necessary variables. Reference the services to get your keys. An example structure could be:
+Copy `.env.example` to `.env` and fill in your keys. It has this structure:
 
 ```env
 # Database configuration (Docker & Prisma)
@@ -85,14 +85,16 @@ POSTGRES_HOST='localhost'
 POSTGRES_PORT='5433'
 POSTGRES_DB='portfolio'
 DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+DIRECT_URL="${DATABASE_URL}"
 
 # Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
 
 # Supabase Storage & Assets
-SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 NEXT_PUBLIC_RESUME_URL=
 
 # EmailJS Configuration
@@ -100,6 +102,10 @@ NEXT_PUBLIC_EMAILJS_SERVICE_ID=
 NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
 NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
 ```
+
+`DATABASE_URL` is the connection the app uses at runtime. `DIRECT_URL` is the one Prisma uses for migrations. Locally both point to the Docker database. On Supabase, set `DATABASE_URL` to the transaction pooler (port `6543`, with `?pgbouncer=true`) and `DIRECT_URL` to the session pooler (port `5432`), because migrations hang on the transaction pooler.
+
+`SUPABASE_SERVICE_ROLE_KEY` (Supabase → Project Settings → API Keys) is used only on the server, by the admin actions that sign image uploads and delete images. It bypasses all storage policies, so never expose it with a `NEXT_PUBLIC_` prefix.
 
 ### 4. Start the Database (Docker)
 

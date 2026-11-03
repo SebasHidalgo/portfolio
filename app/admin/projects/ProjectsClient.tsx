@@ -15,7 +15,7 @@ import {
   deleteProject,
   reorderProjects,
 } from "@/lib/database/tables/project";
-import { deleteFile } from "@/lib/supabase/helpers";
+import { removeProjectImage } from "@/lib/supabase/helpers";
 
 export default function ProjectsClient({
   initialProjects,
@@ -70,22 +70,34 @@ export default function ProjectsClient({
     displayOrder: number;
   }) => {
     if (editingItem) {
-      updateMut.mutate({ id: editingItem.id, data });
+      const previousImage = editingItem.image;
+      const imageChanged = Boolean(data.image) && data.image !== previousImage;
+      updateMut.mutate(
+        { id: editingItem.id, data },
+        {
+          onSuccess: () => {
+            if (imageChanged && previousImage) removeProjectImage(previousImage);
+          },
+          onError: () => {
+            if (imageChanged) removeProjectImage(data.image);
+          },
+        },
+      );
     } else {
-      createMut.mutate(data);
+      createMut.mutate(data, {
+        onError: () => removeProjectImage(data.image),
+      });
     }
   };
 
   const handleDelete = (id: string) => {
     if (confirm("Delete this project?")) {
       const project = projects.find((p) => p.id === id);
-      if (project && project.image) {
-        const oldFileName = project.image.split("/").pop();
-        if (oldFileName) {
-          deleteFile(oldFileName);
-        }
-      }
-      deleteMut.mutate(id);
+      deleteMut.mutate(id, {
+        onSuccess: () => {
+          if (project?.image) removeProjectImage(project.image);
+        },
+      });
     }
   };
 
